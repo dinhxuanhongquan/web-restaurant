@@ -16,5 +16,5 @@ public class CategoryDishResponse {
     String categoryName;
     String categoryDescription;
 
-    Set<Dish> dishes;
+    Set<DishResponse> dishes;
 }

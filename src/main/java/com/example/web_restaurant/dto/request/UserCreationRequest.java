@@ -21,7 +21,7 @@ public class UserCreationRequest {
     @Size(min = 4, message = "PASSWORD_VALIDATION")
     String password;
 
-    String fisrtName;
+    String firstName;
     String lastName;
 
     LocalDate dob;
@@ -29,6 +29,7 @@ public class UserCreationRequest {
     String email;
     String phoneNumber;
 
+    List<String> categoryDishes;
     List<String> bills;
     List<String> roles;
 }

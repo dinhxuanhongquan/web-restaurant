@@ -23,6 +23,7 @@ public class UserUpdateRequest {
     String email;
     String phoneNumber;
 
+    List<String> categoryDishes;
     List<String> bills;
     List<String> roles;
 

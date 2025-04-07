@@ -1,5 +1,6 @@
 package com.example.web_restaurant.dto.request;
 
+import com.example.web_restaurant.dto.response.DishResponse;
 import com.example.web_restaurant.entity.Dish;
 import com.example.web_restaurant.entity.Table;
 import com.example.web_restaurant.entity.User;
@@ -19,9 +20,7 @@ public class BillUpdateRequest {
     String billStatus;
     String phoneNumber;
 
-    Table table;
-    User user;
-    Set<Dish> dishes;
+    Set<DishResponse> dishes;
 
     Integer quantity;
     String totalPrice;

@@ -21,19 +21,10 @@ public class Bill {
     String billStatus;
     String phoneNumber;
 
-    @OneToOne
-    @JoinColumn(name = "tableId")
-    Table table;
-
-    @OneToOne
-    @JoinColumn(name = "userId")
-    User user;
-
     @ManyToMany
     Set<Dish> dishes;
 
     Integer quantity;
-
     String totalPrice;
 
 }

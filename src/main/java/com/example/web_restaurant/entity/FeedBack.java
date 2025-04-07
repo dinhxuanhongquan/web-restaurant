@@ -21,10 +21,4 @@ public class FeedBack {
 
     String phoneNumber;
     String email;
-
-    @OneToOne
-    @JoinColumn(name = "dishId")
-    Dish dish;
-
-
 }

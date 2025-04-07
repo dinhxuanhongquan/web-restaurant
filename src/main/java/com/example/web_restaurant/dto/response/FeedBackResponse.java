@@ -16,5 +16,4 @@ public class FeedBackResponse {
     String feedBackContent;
     String phoneNumber;
     String email;
-    Dish dish;
 }

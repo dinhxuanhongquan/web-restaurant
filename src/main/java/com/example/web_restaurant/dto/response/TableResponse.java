@@ -19,5 +19,5 @@ public class TableResponse {
     String kindTable;
     String statusTable;
 
-    Set<Bill> bills;
+    Set<BillResponse> bills;
 }

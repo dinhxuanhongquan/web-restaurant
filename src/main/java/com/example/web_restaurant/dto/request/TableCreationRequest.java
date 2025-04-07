@@ -15,6 +15,6 @@ public class TableCreationRequest {
 
     String tableName;
     String kindTable;
-    String StatusTable;
+    String statusTable;
     List<String> bills;
 }

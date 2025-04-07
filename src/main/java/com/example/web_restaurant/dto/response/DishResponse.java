@@ -1,9 +1,5 @@
 package com.example.web_restaurant.dto.response;
 
-import com.example.web_restaurant.entity.Bill;
-import com.example.web_restaurant.entity.FeedBack;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.ManyToMany;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -23,6 +19,6 @@ public class DishResponse {
     String dishPrice;
 
     String dishCategory;
-    Set<Bill> bills;
-    Set<FeedBack> feedBacks;
+    Set<BillResponse> bills;
+    Set<FeedBackResponse> feedBacks;
 }

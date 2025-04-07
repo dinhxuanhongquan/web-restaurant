@@ -21,6 +21,7 @@ public class UserResponse {
     String phoneNumber;
     LocalDate dob;
 
+    Set<CategoryDishResponse> categoryDishes;
     Set<BillResponse> bills;
     Set<RoleResponse> roles;
 

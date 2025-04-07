@@ -24,13 +24,16 @@ public class User {
     String username;
 
     String password;
-    String fisrtName;
+    String firstName;
     String lastName;
     LocalDate dob;
 
     @Column(name = "email", unique = true, columnDefinition = "VARCHAR(255) COLLATE utf8mb4_unicode_ci")
     String email;
     String phoneNumber;
+
+    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    Set<CategoryDish> categoryDishes;
 
     @ManyToMany (cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     Set<Bill> bills;
