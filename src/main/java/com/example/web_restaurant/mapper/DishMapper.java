@@ -11,6 +11,8 @@ import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = "spring", uses = {BillMapper.class, FeedBackMapper.class})
 public interface DishMapper {
+    @Mapping(target = "bills", ignore = true)
+    @Mapping(target = "feedBacks", ignore = true)
     Dish toDish(DishCreationRequest request);
 
     DishResponse toResponse(Dish dish);

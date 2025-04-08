@@ -10,6 +10,7 @@ import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = "spring")
 public interface CategoryDishMapper {
+    @Mapping(target = "dishes", ignore = true)
     CategoryDish toCategoryDish(CategoryDishCreationRequest request);
 
     CategoryDishResponse toCategoryDishResponse(CategoryDish categoryDish);

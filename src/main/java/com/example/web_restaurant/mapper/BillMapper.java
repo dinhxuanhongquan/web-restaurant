@@ -10,6 +10,7 @@ import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = "spring", uses = {DishMapper.class})
 public interface BillMapper {
+    @Mapping(target = "dishes", ignore = true)
     Bill toBill(BillCreationRequest request);
 
     BillResponse toBillResponse(Bill bill);

@@ -10,6 +10,7 @@ import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = "spring", uses = {BillMapper.class})
 public interface TableMapper {
+    @Mapping(target = "bills", ignore = true)
     Table toTable(TableCreationRequest request);
 
     TableResponse toTableResponse(Table table);
