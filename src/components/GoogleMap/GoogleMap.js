@@ -18,7 +18,7 @@ const MapComponent = () => {
 
   const locations = [
     {
-      name: "La Delizioso",
+      name: "Restaurant",
       location: { 
         lat: 10.8009,
         lng: 106.6582
