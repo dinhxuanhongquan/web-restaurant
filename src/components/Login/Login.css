@@ -1,0 +1,152 @@
+/* Login.css */
+.login-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1001;
+}
+
+.login-container {
+    width: 100%;
+    max-width: 400px;
+    animation: fadeIn 0.3s;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.login-wrapper {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    padding: 30px;
+    width: 100%;
+}
+
+.login-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.login-header h2 {
+    margin: 0;
+    color: #333;
+    font-family: 'Playfair Display', serif;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #777;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.close-btn:hover {
+    color: #d4833b;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+    color: #333;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: border-color 0.3s;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #d4833b;
+}
+
+.login-submit-btn {
+    width: 100%;
+    background-color: #d4833b;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.login-submit-btn:hover {
+    background-color: #c0732f;
+}
+
+.login-footer {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.login-footer p {
+    margin: 8px 0;
+    color: #666;
+}
+
+.login-footer a {
+    color: #d4833b;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.login-footer a:hover {
+    color: #c0732f;
+    text-decoration: underline;
+}
+
+.link-button {
+    background: none;
+    border: none;
+    padding: 0;
+    color: #d4833b;
+    text-decoration: underline;
+    cursor: pointer;
+    font-size: inherit;
+    font-family: inherit;
+}
+
+.link-button:hover {
+    color: #c0732f;
+}
+
+@media (max-width: 480px) {
+    .login-container {
+        width: 90%;
+    }
+    
+    .login-wrapper {
+        padding: 20px;
+    }
+}

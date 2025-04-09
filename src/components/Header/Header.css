@@ -49,6 +49,20 @@
     display: none;
 }
 
+.login-btn {
+    background-color: #d4833b;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: background-color 0.3s;
+}
+.login-btn:hover {
+    background-color: #bc581a;
+    cursor: pointer;
+}
+
 @media (max-width: 768px){
     .nav-menu {
         position: absolute;

@@ -1,5 +1,7 @@
 import React from 'react';
 import './Footer.css';
+import { faFacebook, faGithub } from '@fortawesome/free-brands-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const Footer = () => {
   return (
@@ -32,9 +34,12 @@ const Footer = () => {
           <div className="footer-social">
             <h3>Follow Us</h3>
             <div className="social-icons">
-              <a href="https://facebook.com" className="social-icon">Facebook</a>
-              <a href="https://instagram.com" className="social-icon">Instagram</a>
-              <a href="https://twitter.com" className="social-icon">Twitter</a>
+              <a href="https://facebook.com/hong.quann.660872/" className="social-icon">
+              <FontAwesomeIcon icon={faFacebook} size='2x' spin/>Facebook
+              </a>
+              <a href="https://github.com/dinhxuanhongquan" className="social-icon">
+              <FontAwesomeIcon icon={faGithub} size='2x' spin/> GitHub
+              </a>
             </div>
           </div>
         </div>

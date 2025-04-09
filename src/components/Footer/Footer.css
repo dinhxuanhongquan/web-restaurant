@@ -50,20 +50,23 @@
 }
 
 .footer-contact p {
-  margin: 10px 0;
-  color: #aaa;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .social-icons {
   display: flex;
   flex-wrap: wrap;
+  flex-direction: column;
   gap: 15px;
 }
 
 .social-icon {
   color: #aaa;
-  text-decoration: none;
-  transition: color 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .social-icon:hover {
@@ -80,6 +83,14 @@
   color: #aaa;
   margin: 0;
   font-size: 0.9rem;
+}
+
+.fa-facebook {
+  color: #1877f2
+}
+
+.fa-github {
+  color: #333;
 }
 
 @media (max-width: 768px) {

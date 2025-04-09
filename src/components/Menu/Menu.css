@@ -63,6 +63,7 @@
 }
 
 .menu-item-img {
+  position: relative;
   height: 200px;
   overflow: hidden;
 }
@@ -74,8 +75,81 @@
   transition: transform 0.5s ease;
 }
 
+/* Tao overlay khi hover */
+.menu-item-overlay {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.3s ease;
+  padding: 20px;
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+
+.menu-item:hover .menu-item-overlay {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 .menu-item:hover .menu-item-img img {
   transform: scale(1.1);
+}
+
+/* Style cho noi dung trong overlay */
+.overlay-content {
+  width: 100%;
+}
+
+.overlay-content h4 {
+  margin-top: 0;
+  margin-bottom: 10px;
+  color: #d4833b;
+  font-family: 'Playfair Display', serif;
+}
+
+.overlay-content ul{
+  list-style: none;
+  padding: 0;
+  margin: 0 0 15px 0;
+}
+
+.overlay-content li{
+  font-size: 0.85rem;
+  margin-bottom: 5px;
+  padding-left: 15px;
+
+  position: relative;
+}
+
+.overlay-content li::before{
+  content: '•';
+  color: #d4833b;
+  position: absolute;
+  left: 0;
+}
+
+.menu-item-details {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font-size: 0.85rem;
+  margin-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  padding-top: 10px;
+}
+
+.menu-item-details p{
+  margin: 0;
 }
 
 .menu-item-info {
@@ -104,6 +178,13 @@
   color: #777;
   margin: 0;
   font-size: 0.9rem;
+}
+
+/* Dam bao noi dung trong overlay khong qua dai */
+@media (max-height: 600px){
+  .menu-item-overlay{
+    overflow-y: auto;
+  }
 }
 
 @media (max-width: 768px) {

@@ -1,0 +1,106 @@
+.map-section {
+    padding: 80px 0;
+    background-color: #fff;
+  }
+  
+  .map-container {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 30px;
+    margin-top: 20px;
+  }
+  
+  .location-info {
+    height: 100%;
+  }
+  
+  .info-card {
+    background-color: #f9f9f9;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .info-card h3 {
+    font-family: 'Playfair Display', serif;
+    color: #333;
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 1.6rem;
+  }
+  
+  .info-item {
+    margin-bottom: 20px;
+  }
+  
+  .info-item strong {
+    display: block;
+    color: #d4833b;
+    margin-bottom: 5px;
+    font-size: 1.1rem;
+  }
+  
+  .info-item p {
+    margin: 5px 0;
+    color: #555;
+  }
+  
+  .direction-btn {
+    display: inline-block;
+    background-color: #d4833b;
+    color: white;
+    text-decoration: none;
+    padding: 12px 25px;
+    border-radius: 5px;
+    font-weight: 600;
+    text-align: center;
+    transition: background-color 0.3s ease;
+    margin-top: auto;
+  }
+  
+  .direction-btn:hover {
+    background-color: #c0732f;
+  }
+  
+  .info-window {
+    padding: 5px;
+  }
+  
+  .info-window h3 {
+    margin: 0 0 5px 0;
+    color: #d4833b;
+    font-size: 1rem;
+  }
+  
+  .info-window p {
+    margin: 0 0 5px 0;
+    font-size: 0.9rem;
+  }
+  
+  .info-window a {
+    color: #d4833b;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+  
+  .info-window a:hover {
+    text-decoration: underline;
+  }
+  
+  @media (max-width: 768px) {
+    .map-container {
+      grid-template-columns: 1fr;
+    }
+    
+    .map-container > div:first-child {
+      order: 2;
+    }
+    
+    .location-info {
+      order: 1;
+    }
+  }
