@@ -1,5 +1,18 @@
 .App {
-  text-align: center;
+  font-family: 'Poppins', sans-serif;
+  color: #333;
+  max-width: 100vw;
+  overflow: hidden;
+}
+
+section {
+  padding: 60px 0;
+}
+
+.container {
+  width: 90%;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .App-logo {
