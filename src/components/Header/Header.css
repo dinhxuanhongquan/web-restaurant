@@ -63,6 +63,46 @@
     cursor: pointer;
 }
 
+/* Thêm vào Header.css */
+.nav-list button.manager-btn {
+    background: none;
+    border: none;
+    color: inherit;
+    font: inherit;
+    padding: 0;
+    cursor: pointer;
+    text-decoration: none;
+  }
+  
+  .nav-list button.manager-btn:hover {
+    color: #d4833b;
+  }
+  
+  .user-controls {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+  
+  .user-welcome {
+    font-weight: 500;
+  }
+  
+  .logout-btn {
+    background-color: transparent;
+    border: 1px solid #d4833b;
+    color: #d4833b;
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+  
+  .logout-btn:hover {
+    background-color: #d4833b;
+    color: white;
+  }
+
 @media (max-width: 768px){
     .nav-menu {
         position: absolute;

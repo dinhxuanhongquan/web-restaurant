@@ -39,7 +39,7 @@ const MapComponent = () => {
     <section id="location" className="map-section">
       <div className="container">
         <div className="section-title">
-          <h2>location</h2>
+          <h2>Location</h2>
           <p>Visit our restaurant for an unforgettable dining experience</p>
         </div>
 

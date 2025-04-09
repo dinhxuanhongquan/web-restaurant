@@ -47,10 +47,22 @@
   color: white;
 }
 
+.primary-btn a {
+  text-decoration: none;
+  color: white;
+  font-weight: 600;
+}
+
 .secondary-btn {
   background-color: transparent;
   color: white;
   border: 2px solid white;
+}
+
+.secondary-btn a{
+  text-decoration: none;
+  color: white;
+  font-weight: 600;
 }
 
 .primary-btn:hover {
