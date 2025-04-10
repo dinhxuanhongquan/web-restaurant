@@ -28,7 +28,7 @@ const TableReservation = ({ isOpen, onClose }) => {
   // Tạo URL đặt bàn dựa trên thông tin bàn
   const getReservationUrl = (table) => {
     // Trong thực tế, bạn có thể tạo URL tới hệ thống đặt bàn của bạn
-    return `https://restaurant.com/reserve?table=${table.id}&seats=${table.seats}`;
+    return `http://192.168.172.1:3000/reserve?table=${table.id}&seats=${table.seats}`;
   };
   
   // Lọc bàn dựa trên các bộ lọc đã chọn
@@ -117,7 +117,7 @@ const TableReservation = ({ isOpen, onClose }) => {
                 <div className="qr-content">
                   <QRCodeSVG
                     value={getReservationUrl(table)}
-                    size={150}
+                    size={100}
                     level={"H"}
                     includeMargin={true}
                     imageSettings={{
@@ -130,10 +130,6 @@ const TableReservation = ({ isOpen, onClose }) => {
                     }}
                   />
                   <p>Quét mã để đặt bàn</p>
-                  <p className="table-info-qr">
-                    Bàn {table.name} - {table.seats} người<br />
-                    Trạng thái: {getStatusText(table.status)}
-                  </p>
                 </div>
               </div>
             </div>
