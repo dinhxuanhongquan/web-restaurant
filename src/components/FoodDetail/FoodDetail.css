@@ -1,0 +1,435 @@
+.food-detail-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1001;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.food-detail-container {
+    background-color: #fadfc3;
+    width: 100%;
+    max-width: 900px;
+    max-height: 90vh;
+    border-radius: 8px;
+    overflow-y: auto;
+    animation: fadeIn 0.3s ease;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.food-detail-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    border-bottom: 1px solid #eee;
+    position: sticky;
+    top: 0;
+    background-color: rgb(245, 244, 212);
+    z-index: 10;
+}
+
+.food-detail-header h2 {
+    margin: 0;
+    font-family: 'Playfair Display', serif;
+    color: #333;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #777;
+    transition: color 0.2s;
+}
+
+.close-btn:hover {
+    color: #d4833b;
+}
+
+.food-detail-loading {
+    padding: 50px 20px;
+    text-align: center;
+    font-size: 18px;
+    color: #777;
+}
+
+.food-detail-content {
+    padding: 0 20px 20px;
+}
+
+.food-main-info {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    margin-bottom: 40px;
+}
+
+.food-image {
+    width: 100%;
+    height: 300px;
+    overflow: hidden;
+    border-radius: 8px;
+}
+
+.food-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.food-info {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.food-rating {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.stars {
+    display: flex;
+}
+
+.star {
+    color: #ddd;
+    font-size: 24px;
+    cursor: default;
+}
+
+.star.filled {
+    color: #f8ce0b;
+}
+
+.rating-value {
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.review-count {
+    color: #777;
+}
+
+.food-price {
+    font-size: 24px;
+    font-weight: bold;
+    color: #d4833b;
+}
+
+.food-description {
+    font-size: 16px;
+    line-height: 1.6;
+    color: #555;
+}
+
+.food-ingredients h3, 
+.food-nutrition h3 {
+    margin-bottom: 10px;
+    font-family: 'Playfair Display', serif;
+}
+
+.food-ingredients ul {
+    padding-left: 20px;
+    columns: 2;
+}
+
+.food-ingredients li {
+    margin-bottom: 5px;
+}
+
+.nutrition-info {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.nutrition-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px;
+    background-color: #faf6ef;
+    border-radius: 4px;
+}
+
+.food-reviews-section {
+    border-top: 1px solid #eee;
+    padding-top: 30px;
+}
+
+.food-reviews-section h3 {
+    margin-bottom: 20px;
+    font-family: 'Playfair Display', serif;
+    text-align: center;
+}
+
+.add-review {
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 30px;
+}
+
+.add-review h4 {
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+
+.rating-input {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    gap: 10px;
+}
+
+.stars-input .star {
+    cursor: pointer;
+    transition: transform 0.1s;
+}
+
+.stars-input .star:hover {
+    transform: scale(1.2);
+}
+
+.review-input textarea {
+    width: 100%;
+    height: 100px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    resize: none;
+    font-family: inherit;
+}
+
+.submit-review-btn {
+    background-color: #d4833b;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+    margin-top: 10px;
+    transition: background-color 0.2s;
+}
+
+.submit-review-btn:hover {
+    background-color: #c0732f;
+}
+
+.login-prompt {
+    text-align: center;
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+}
+.login-btn {
+    background-color: #d4833b;
+    color: white;
+    padding: 12px 25px;
+    border-radius: 4px;
+    display: inline-block;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.2s ease;
+    font-size: 16px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.login-btn:hover {
+    background-color: #c0732f;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+.link-button {
+    background: none;
+    border: none;
+    color: #d4833b;
+    cursor: pointer;
+    font-weight: 600;
+    padding: 0;
+    font-size: inherit;
+    text-decoration: underline;
+}
+
+.reviews-list h4 {
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+.review-item {
+    border: 1px solid #eee;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    background-color: white;
+}
+
+.review-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.review-user {
+    font-weight: 600;
+}
+
+.review-date {
+    color: #777;
+    font-size: 14px;
+}
+
+.review-rating {
+    margin-bottom: 10px;
+}
+
+.review-rating .star {
+    font-size: 18px;
+}
+
+.review-text {
+    margin-bottom: 15px;
+    color: #333;
+    line-height: 1.5;
+}
+
+.review-actions {
+    margin-bottom: 15px;
+}
+
+.like-btn {
+    background-color: #f1f1f1;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 14px;
+    color: #555;
+    transition: background-color 0.2s;
+}
+
+.like-btn:hover {
+    background-color: #e1e1e1;
+}
+
+.review-reply {
+    background-color: #f8f8f8;
+    border-radius: 8px;
+    padding: 15px;
+    margin-top: 10px;
+    position: relative;
+}
+
+.review-reply:before {
+    content: '';
+    position: absolute;
+    top: -8px;
+    left: 20px;
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-bottom: 8px solid #f8f8f8;
+}
+
+.reply-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.reply-header strong {
+    color: #d4833b;
+}
+
+.reply-date {
+    color: #777;
+    font-size: 12px;
+}
+
+.reply-text {
+    color: #333;
+    line-height: 1.5;
+}
+
+.admin-reply-form {
+    margin-top: 15px;
+}
+
+.admin-reply-form textarea {
+    width: 100%;
+    height: 80px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    resize: none;
+    margin-bottom: 10px;
+    font-family: inherit;
+}
+
+.reply-btn {
+    background-color: #4a90e2;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.2s;
+}
+
+.reply-btn:hover {
+    background-color: #357ab8;
+}
+
+.reply-btn:disabled {
+    background-color: #aaa;
+    cursor: not-allowed;
+}
+
+.no-reviews {
+    text-align: center;
+    color: #777;
+    padding: 30px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+}
+
+@media (max-width: 768px) {
+    .food-main-info {
+        grid-template-columns: 1fr;
+    }
+    
+    .food-image {
+        height: 250px;
+    }
+    
+    .nutrition-info {
+        grid-template-columns: 1fr;
+    }
+    
+    .food-ingredients ul {
+        columns: 1;
+    }
+}

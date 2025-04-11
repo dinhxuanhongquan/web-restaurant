@@ -5,61 +5,54 @@ import Hero from './components/Hero/Hero';
 import Menu from './components/Menu/Menu';
 import About from './components/About/About';
 import Contact from './components/Contact/Contact';
-import GoogleMap from './components/GoogleMap/GoogleMap';
 import Footer from './components/Footer/Footer';
 import Login from './components/Login/Login';
 import AdminPanel from './components/Admin/AdminPanel';
-import TableReservation from './components/TableReservation/TableReservation';
 
 function App() {
   const [isLoginOpen, setIsLoginOpen] = useState(false);
-  const [isTableReservationOpen, setIsTableReservationOpen] = useState(false);
-  const [user, setUser] = useState(null);
   const [isAdminPanelOpen, setIsAdminPanelOpen] = useState(false);
+  const [user, setUser] = useState(null); // null means not logged in
 
   const handleLogin = (userData) => {
     setUser(userData);
     setIsLoginOpen(false);
+    
+    if (userData.isAdmin) {
+      setIsAdminPanelOpen(true);
+    }
   };
 
   const handleLogout = () => {
     setUser(null);
   };
 
-  const toggleAdminPanel = () => {
-    setIsAdminPanelOpen(!isAdminPanelOpen);
-  };
-
   return (
     <div className="App">
       <Header 
         setIsLoginOpen={setIsLoginOpen} 
-        setIsTableReservationOpen={setIsTableReservationOpen}
         user={user} 
-        onLogout={handleLogout}
-        isAdmin={user?.username === 'admin'}
-        toggleAdminPanel={toggleAdminPanel}
+        onLogout={handleLogout} 
+        setIsAdminPanelOpen={setIsAdminPanelOpen} 
       />
-      <Hero setIsTableReservationOpen={setIsTableReservationOpen} />
-      <Menu />
+      <Hero />
+      <Menu 
+        user={user} 
+        setIsLoginOpen={setIsLoginOpen}
+      />
       <About />
-      <Contact setIsTableReservationOpen={setIsTableReservationOpen} />
-      <GoogleMap />
+      <Contact />
       <Footer />
+      
       {isLoginOpen && (
         <Login 
           setIsLoginOpen={setIsLoginOpen} 
-          onLogin={handleLogin}
+          onLogin={handleLogin} 
         />
       )}
-      {isAdminPanelOpen && user?.username === 'admin' && (
+      
+      {isAdminPanelOpen && user?.isAdmin && (
         <AdminPanel onClose={() => setIsAdminPanelOpen(false)} />
-      )}
-      {isTableReservationOpen && (
-        <TableReservation 
-          isOpen={isTableReservationOpen}
-          onClose={() => setIsTableReservationOpen(false)} 
-        />
       )}
     </div>
   );
