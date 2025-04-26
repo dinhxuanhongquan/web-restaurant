@@ -10,7 +10,6 @@ import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = "spring")
 public interface BookingMapper{
-    @Mapping(target = "tables", ignore = true)
     Booking toBooking(BookingCreationRequest request);
 
     BookingResponse toBookingResponse(Booking booking);

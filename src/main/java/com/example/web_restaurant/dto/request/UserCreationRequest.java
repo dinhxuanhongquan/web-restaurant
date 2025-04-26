@@ -25,11 +25,12 @@ public class UserCreationRequest {
     String lastName;
 
     LocalDate dob;
+    String image;
 
     String email;
     String phoneNumber;
 
-    List<String> categoryDishes;
-    List<String> bills;
-    List<String> roles;
+    List<String> bookings;
+    List<String> feedBacks;
+    List<String> replies;
 }

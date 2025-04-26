@@ -4,16 +4,16 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
-import java.util.Set;
 
 @Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
-public class BillUpdateRequest {
-    LocalDateTime billTime;
-    String bookingId;
-    Set<String> billDishes;
+@FieldDefaults( level = AccessLevel.PRIVATE)
+public class ReplyCreationRequest {
+    String replyContent;
+    LocalDateTime replyTime;
+
     String userId;
+    String feedbackId;
 }

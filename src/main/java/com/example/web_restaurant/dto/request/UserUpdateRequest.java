@@ -22,9 +22,11 @@ public class UserUpdateRequest {
 
     String email;
     String phoneNumber;
+    String image;
 
-    List<String> categoryDishes;
-    List<String> bills;
     List<String> roles;
+    List<String> bookings;
+    List<String> feedBacks;
+    List<String> replies;
 
 }

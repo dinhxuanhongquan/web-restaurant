@@ -1,11 +1,11 @@
 package com.example.web_restaurant.dto.response;
 
-import com.example.web_restaurant.entity.Dish;
-import com.example.web_restaurant.entity.Table;
+import com.example.web_restaurant.entity.Booking;
 import com.example.web_restaurant.entity.User;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Data
@@ -15,11 +15,10 @@ import java.util.Set;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class BillResponse {
     String billId;
-    String billContent;
-    String billStatus;
-    String phoneNumber;
+    LocalDateTime billTime;
 
-    Set<DishResponse> dishes;
-    Integer quantity;
-    String totalPrice;
+    Booking booking;
+
+    Set<BillDishResponse> billDishes;
+    User user;
 }

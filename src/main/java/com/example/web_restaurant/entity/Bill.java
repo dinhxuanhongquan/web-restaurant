@@ -3,6 +3,8 @@ package com.example.web_restaurant.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Getter
@@ -13,18 +15,19 @@ import java.util.Set;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 public class Bill {
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @Id @GeneratedValue(strategy = GenerationType.UUID)
     String billId;
 
-    String billContent;
-    String billStatus;
-    String phoneNumber;
+    LocalDateTime billTime;
 
-    @ManyToMany
-    Set<Dish> dishes;
+    @OneToOne
+    @JoinColumn(name = "bookingId")
+    Booking booking;
 
-    Integer quantity;
-    String totalPrice;
+    @OneToMany(mappedBy = "bill", cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    Set<BillDish> billDishes;
 
+    @ManyToOne
+    @JoinColumn(name = "userId")
+    User user;
 }

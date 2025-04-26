@@ -14,9 +14,7 @@ import java.util.Set;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 public class Dish {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @Id @GeneratedValue(strategy = GenerationType.UUID)
     String dishId;
 
     String dishName;
@@ -24,11 +22,13 @@ public class Dish {
     String dishImage;
     String dishPrice;
 
-    String dishCategory;
+    @OneToMany(mappedBy = "dish", cascade = CascadeType.ALL, orphanRemoval = true)
+    Set<BillDish> billDishes;
 
-    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-    Set<Bill> bills;
-
-    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @OneToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     Set<FeedBack> feedBacks;
+
+    @OneToOne
+    @JoinColumn(name = "categoryId")
+    CategoryDish categoryDish;
 }

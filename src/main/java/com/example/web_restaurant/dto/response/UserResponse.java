@@ -20,9 +20,11 @@ public class UserResponse {
     String email;
     String phoneNumber;
     LocalDate dob;
+    String image;
 
-    Set<CategoryDishResponse> categoryDishes;
-    Set<BillResponse> bills;
+
+    Set<BookingResponse> bookings;
+    Set<FeedBackResponse> feedBacks;
+    Set<ReplyResponse> replies;
     Set<RoleResponse> roles;
-
 }

@@ -5,7 +5,6 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
-import java.util.Set;
 
 @Entity
 @Getter
@@ -15,16 +14,19 @@ import java.util.Set;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Booking {
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @Id @GeneratedValue(strategy = GenerationType.UUID)
     String bookingId;
 
-    String customerName;
-    String customerPhoneNumber;
-    String customerEmail;
-    String customerMessage;
     LocalDateTime bookingTime;
 
-    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-    Set<Table> tables;
+    @ManyToOne
+    @JoinColumn(name = "userId")
+    User user;
+
+    @ManyToOne
+    @JoinColumn(name = "tableId")
+    Table table;
+
+    @OneToOne (mappedBy = "booking", cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    Bill bill;
 }

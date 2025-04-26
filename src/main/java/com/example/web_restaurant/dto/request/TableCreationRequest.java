@@ -4,7 +4,7 @@ package com.example.web_restaurant.dto.request;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.util.List;
+import java.util.Set;
 
 @Builder
 @Data
@@ -12,9 +12,10 @@ import java.util.List;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class TableCreationRequest {
-
     String tableName;
-    String kindTable;
-    String statusTable;
-    List<String> bills;
+    String tableSeat;
+    String tableKind;
+    String tableStatus;
+    String tableLocation;
+    Set<String> bookings;
 }

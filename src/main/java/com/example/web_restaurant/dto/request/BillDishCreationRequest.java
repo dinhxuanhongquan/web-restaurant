@@ -3,17 +3,14 @@ package com.example.web_restaurant.dto.request;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.time.LocalDateTime;
 
-@Data
 @Builder
+@Data
 @NoArgsConstructor
-@AllArgsConstructor 
+@AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class BookingUpdateRequest {
-    LocalDateTime bookingTime;
-
-    String userId;
-    String tableId;
+public class BillDishCreationRequest {
+    Integer quantity;
     String billId;
+    String dishId;
 }

@@ -15,7 +15,7 @@ import lombok.experimental.FieldDefaults;
 @Entity
 public class Permission {
     @Id
-    String PermissionName;
+    String permissionName;
 
     String description;
 

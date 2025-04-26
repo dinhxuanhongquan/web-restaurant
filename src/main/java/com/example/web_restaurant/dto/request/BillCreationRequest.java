@@ -1,12 +1,9 @@
 package com.example.web_restaurant.dto.request;
 
-import com.example.web_restaurant.dto.response.DishResponse;
-import com.example.web_restaurant.entity.Dish;
-import com.example.web_restaurant.entity.Table;
-import com.example.web_restaurant.entity.User;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Builder
@@ -15,12 +12,8 @@ import java.util.Set;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class BillCreationRequest {
-    String billContent;
-    String billStatus;
-    String phoneNumber;
-
-    Set<DishResponse> dishes;
-
-    Integer quantity;
-    String totalPrice;
+    LocalDateTime billTime;
+    String bookingId;
+    Set<String> billDishes;
+    String userId;
 }

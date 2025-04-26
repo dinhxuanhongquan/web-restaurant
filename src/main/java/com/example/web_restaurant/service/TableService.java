@@ -4,11 +4,13 @@ import com.example.web_restaurant.dto.request.TableCreationRequest;
 import com.example.web_restaurant.dto.request.TableUpdateRequest;
 import com.example.web_restaurant.dto.response.TableResponse;
 import com.example.web_restaurant.entity.Bill;
+import com.example.web_restaurant.entity.Booking;
 import com.example.web_restaurant.entity.Table;
 import com.example.web_restaurant.exception.AppException;
 import com.example.web_restaurant.exception.ErrorCode;
 import com.example.web_restaurant.mapper.TableMapper;
 import com.example.web_restaurant.repository.BillRepository;
+import com.example.web_restaurant.repository.BookingRepository;
 import com.example.web_restaurant.repository.TableRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -30,16 +32,15 @@ import java.util.List;
 public class TableService {
     TableMapper tableMapper;
     TableRepository tableRepository;
-    BillRepository billRepository;
+    BookingRepository bookingRepository;
 
     @PreAuthorize("hasRole('ADMIN')")
     public TableResponse createTable(TableCreationRequest request){
         Table table = tableMapper.toTable(request);
 
-        HashSet<Bill> bills = new HashSet<>();
-
-        billRepository.findById(request.getBills().toString()).ifPresent(bills::add);
-        table.setBills(bills);
+        HashSet<Booking> bookings = new HashSet<>();
+        bookingRepository.findById(request.getBookings().toString()).ifPresent(bookings::add);
+        table.setBookings(bookings);
 
         try{
             table = tableRepository.save(table);
@@ -50,14 +51,12 @@ public class TableService {
         return tableMapper.toTableResponse(table);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     public List<TableResponse> getAllTables(){
         return tableRepository.findAll().stream()
                 .map(tableMapper::toTableResponse)
                 .toList();
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     public TableResponse getTableById(String tableId){
         return tableMapper.toTableResponse(
                 tableRepository.findById(tableId).orElseThrow(() -> new AppException(ErrorCode.TABLE_NOT_EXISTED))
@@ -69,9 +68,8 @@ public class TableService {
         Table table = tableRepository.findById(tableId).orElseThrow(() -> new AppException(ErrorCode.TABLE_NOT_EXISTED));
 
         tableMapper.updateTable(table, request);
-        var bills = billRepository.findAllById(request.getBills());
-
-        table.setBills(new HashSet<>(bills));
+        var bookings = bookingRepository.findAllById(request.getBookings());
+        table.setBookings(new HashSet<>(bookings));
 
         return tableMapper.toTableResponse(tableRepository.save(table));
 

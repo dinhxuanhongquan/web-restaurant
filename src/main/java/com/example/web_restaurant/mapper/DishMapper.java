@@ -9,15 +9,13 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
-@Mapper(componentModel = "spring", uses = {BillMapper.class, FeedBackMapper.class})
+@Mapper(componentModel = "spring", uses = {BillDishMapper.class, FeedBackMapper.class})
 public interface DishMapper {
-    @Mapping(target = "bills", ignore = true)
-    @Mapping(target = "feedBacks", ignore = true)
     Dish toDish(DishCreationRequest request);
 
     DishResponse toResponse(Dish dish);
 
-    @Mapping(target = "bills", ignore = true )
     @Mapping(target = "feedBacks", ignore = true )
+    @Mapping(target = "billDishes", ignore = true)
     void updateDish(@MappingTarget Dish dish, DishUpdateRequest request);
 }

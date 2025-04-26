@@ -1,8 +1,10 @@
 package com.example.web_restaurant.dto.response;
 
 import com.example.web_restaurant.entity.Bill;
+import com.example.web_restaurant.entity.Booking;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -15,9 +17,12 @@ import java.util.Set;
 @FieldDefaults(level =  AccessLevel.PRIVATE)
 public class TableResponse {
     String tableId;
-    String tableName;
-    String kindTable;
-    String statusTable;
 
-    Set<BillResponse> bills;
+    String tableName;
+    Integer tableSeat;
+    String tableKind;
+    String tableStatus;
+    String tableLocation;
+
+    Set<BookingResponse> bookings;
 }

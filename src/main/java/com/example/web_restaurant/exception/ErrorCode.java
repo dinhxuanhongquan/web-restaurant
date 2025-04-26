@@ -15,7 +15,39 @@ public enum ErrorCode {
     UNAUTHENTICATED(1006, "Unauthenticated", HttpStatus.UNAUTHORIZED),
     UNAUTHORIZED(1007, "You do not have permission", HttpStatus.FORBIDDEN),
     INVALID_DOB(1008, "Your age must be at least {min}", HttpStatus.BAD_REQUEST),
+
     TABLE_NOT_EXISTED(1009, "Table not existed", HttpStatus.NOT_FOUND),
+
+    DISH_NOT_EXISTED(1010, "Dish not existed", HttpStatus.NOT_FOUND),
+    DISH_NOT_CREATED(1011, "Dish not created", HttpStatus.BAD_REQUEST),
+    DISH_NOT_DELETED(1012, "Dish not deleted", HttpStatus.BAD_REQUEST),
+    DISH_NOT_UPDATED(1013, "Table not created", HttpStatus.BAD_REQUEST),
+
+    CATEGORY_DISH_NOT_EXISTED(1014, "Category dish not existed", HttpStatus.NOT_FOUND),
+    CATEGORY_DISH_NOT_CREATED(1015, "Category dish not created", HttpStatus.BAD_REQUEST),
+
+    BILL_NOT_EXISTED(1016, "Bill not existed", HttpStatus.NOT_FOUND),
+    BILL_NOT_CREATED(1017, "Bill not created", HttpStatus.BAD_REQUEST),
+    BILL_NOT_DELETED(1018, "Bill not deleted", HttpStatus.BAD_REQUEST),
+    BILL_NOT_UPDATED(1019, "Bill not updated", HttpStatus.BAD_REQUEST),
+
+    BILLDISH_NOT_EXISTED(1020, "Bill dish not existed", HttpStatus.NOT_FOUND),
+
+    BOOKING_NOT_EXISTED(1020, "Booking not existed", HttpStatus.NOT_FOUND),
+    BOOKING_NOT_CREATED(1021, "Booking not created", HttpStatus.BAD_REQUEST),
+    BOOKING_NOT_DELETED(1022, "Booking not deleted", HttpStatus.BAD_REQUEST),
+    BOOKING_NOT_UPDATED(1023, "Booking not updated", HttpStatus.BAD_REQUEST),
+
+    FEEDBACK_NOT_EXISTED(1024, "Feedback not existed", HttpStatus.NOT_FOUND),
+    FEEDBACK_NOT_CREATED(1025, "Feedback not created", HttpStatus.BAD_REQUEST),
+    FEEDBACK_NOT_DELETED(1026, "Feedback not deleted", HttpStatus.BAD_REQUEST),
+    FEEDBACK_NOT_UPDATED(1027, "Feedback not updated", HttpStatus.BAD_REQUEST),
+
+    REPLY_NOT_EXISTED(1028, "Reply not existed", HttpStatus.NOT_FOUND),
+    REPLY_NOT_CREATED(1029, "Reply not created", HttpStatus.BAD_REQUEST),
+    REPLY_NOT_DELETED(1030, "Reply not deleted", HttpStatus.BAD_REQUEST),
+    REPLY_NOT_UPDATED(1031, "Reply not updated", HttpStatus.BAD_REQUEST),
+
 
     ;
 

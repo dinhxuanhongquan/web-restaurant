@@ -5,6 +5,9 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDateTime;
+import java.util.Set;
+
 @Getter
 @Setter
 @Builder
@@ -13,12 +16,17 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 public class FeedBack {
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @Id @GeneratedValue(strategy = GenerationType.UUID)
     String feedBackId;
 
     String feedBackContent;
+    LocalDateTime feedBackTime;
+    Integer rating;
 
-    String phoneNumber;
-    String email;
+    @ManyToOne
+    @JoinColumn(name = "userId")
+    User user;
+
+    @OneToMany(mappedBy = "feedBack", cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    Set<Reply> replies;
 }

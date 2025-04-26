@@ -1,6 +1,5 @@
 package com.example.web_restaurant.dto.request;
 
-import com.example.web_restaurant.entity.Dish;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -15,5 +14,6 @@ public class CategoryDishUpdateRequest {
     String categoryName;
     String categoryDescription;
 
-    Set<Dish> dishes;
+    Set<String> dishes;
+    String userId;
 }

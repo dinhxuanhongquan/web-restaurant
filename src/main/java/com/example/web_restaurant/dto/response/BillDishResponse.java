@@ -1,22 +1,18 @@
 package com.example.web_restaurant.dto.response;
 
+import com.example.web_restaurant.entity.Bill;
 import com.example.web_restaurant.entity.Dish;
-import com.example.web_restaurant.entity.User;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.util.Set;
-
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CategoryDishResponse {
-    String categoryId;
-    String categoryName;
-    String categoryDescription;
-
-    Set<DishResponse> dishes;
-    User user;
+public class BillDishResponse {
+    String billDishId;
+    Integer quantity;
+    Bill bill;
+    Dish dish;
 }

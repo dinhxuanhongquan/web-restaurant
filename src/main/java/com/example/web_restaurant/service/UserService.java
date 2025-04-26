@@ -4,13 +4,11 @@ import com.example.web_restaurant.constant.PredefinedRole;
 import com.example.web_restaurant.dto.request.UserCreationRequest;
 import com.example.web_restaurant.dto.request.UserUpdateRequest;
 import com.example.web_restaurant.dto.response.UserResponse;
-import com.example.web_restaurant.entity.Role;
-import com.example.web_restaurant.entity.User;
+import com.example.web_restaurant.entity.*;
 import com.example.web_restaurant.exception.AppException;
 import com.example.web_restaurant.exception.ErrorCode;
 import com.example.web_restaurant.mapper.UserMapper;
-import com.example.web_restaurant.repository.RoleRepository;
-import com.example.web_restaurant.repository.UserRepository;
+import com.example.web_restaurant.repository.*;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -32,6 +30,9 @@ import java.util.List;
 public class UserService {
     UserRepository userRepository;
     RoleRepository roleRepository;
+    FeedBackRepository feedBackRepository;
+    ReplyRepository replyRepository;
+    BookingRepository bookingRepository;
     UserMapper userMapper;
     PasswordEncoder passwordEncoder;
 
@@ -41,10 +42,19 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         HashSet<Role> roles = new HashSet<>();
+        HashSet<FeedBack> feedBacks = new HashSet<>();
+        HashSet<Reply> replies = new HashSet<>();
+        HashSet<Booking> bookings = new HashSet<>();
 
-        roleRepository.findById(PredefinedRole.USER_ROLE).ifPresent(roles::add);
+        roleRepository.findById(PredefinedRole.EMPLOYEE_ROLE).ifPresent(roles::add);
+        feedBackRepository.findById(request.getFeedBacks().toString()).ifPresent(feedBacks::add);
+        replyRepository.findById(request.getReplies().toString()).ifPresent(replies::add);
+        bookingRepository.findById(request.getBookings().toString()).ifPresent(bookings::add);
 
         user.setRoles(roles);
+        user.setFeedBacks(feedBacks);
+        user.setReplies(replies);
+        user.setBookings(bookings);
 
         try{
             user = userRepository.save(user);
@@ -85,9 +95,14 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         var roles = roleRepository.findAllById(request.getRoles());
+        var feedBacks = feedBackRepository.findAllById(request.getFeedBacks());
+        var replies = replyRepository.findAllById(request.getReplies());
+        var bookings = bookingRepository.findAllById(request.getBookings());
 
         user.setRoles(new HashSet<>(roles));
-
+        user.setFeedBacks(new HashSet<>(feedBacks));
+        user.setReplies(new HashSet<>(replies));
+        user.setBookings(new HashSet<>(bookings));
         return userMapper.toUserResponse(
                 userRepository.save(user)
         );

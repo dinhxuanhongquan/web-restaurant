@@ -16,15 +16,15 @@ import java.util.Set;
 @Entity
 public class Table {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @Id @GeneratedValue(strategy = GenerationType.UUID)
     String tableId;
 
     String tableName;
-    String kindTable;
-    String statusTable;
+    Integer tableSeat;
+    String tableKind;
+    String tableStatus;
+    String tableLocation;
 
-    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-    Set<Bill> bills;
-
+    @OneToMany(mappedBy = "table", cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    Set<Booking> bookings;
 }
