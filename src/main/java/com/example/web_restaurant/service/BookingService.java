@@ -21,6 +21,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -56,11 +57,25 @@ public class BookingService {
         );
     }
 
+    public List<BookingResponse> getAllBookingsByTable(String tableId) {
+        return bookingRepository.findAllByTableId(tableId)
+                .stream()
+                .map(bookingMapper::toBookingResponse)
+                .collect(Collectors.toList());
+    }
+
     public List<BookingResponse> getAllBookings() {
         return bookingRepository.findAll()
                 .stream()
                 .map(bookingMapper::toBookingResponse)
                 .toList();
+    }
+
+    public List<BookingResponse> getAllBookingsByUser(String userId) {
+        return bookingRepository.findAllByUserId(userId)
+                .stream()
+                .map(bookingMapper::toBookingResponse)
+                .collect(Collectors.toList());
     }
 
     public BookingResponse updateBooking(String bookingId, BookingUpdateRequest request) {

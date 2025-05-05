@@ -59,6 +59,13 @@ public class BillDishService {
                 .toList();
     }
 
+    public List<BillDishResponse> getAllBillDishesByBillId(String billId) {
+        return billDishRepository.findAllByBillId(billId)
+                .stream()
+                .map(billDishMapper::toBillDishResponse)
+                .toList();
+    }
+
     public BillDishResponse updateBillDish(String billDishId, BillDishUpdateRequest request) {
         BillDish billDish = billDishRepository.findById(billDishId).orElseThrow(() -> new AppException(ErrorCode.BILLDISH_NOT_EXISTED));
         billDishMapper.updateBillDish(billDish, request);
