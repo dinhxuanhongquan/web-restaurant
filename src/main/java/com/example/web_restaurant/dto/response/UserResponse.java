@@ -22,9 +22,8 @@ public class UserResponse {
     LocalDate dob;
     String image;
 
-
-    Set<BookingResponse> bookings;
-    Set<FeedBackResponse> feedBacks;
-    Set<ReplyResponse> replies;
+//    Set<BookingResponse> bookings;
+//    Set<FeedBackResponse> feedBacks;
+//    Set<ReplyResponse> replies;
     Set<RoleResponse> roles;
 }

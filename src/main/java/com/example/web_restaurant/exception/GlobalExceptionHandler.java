@@ -29,6 +29,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(apiResponse);
     }
 
+
     @ExceptionHandler(value = AppException.class)
     ResponseEntity<ApiResponse> dandlingAppException(AppException exception) {
         ErrorCode errorCode = exception.getErrorCode();

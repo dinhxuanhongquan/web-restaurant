@@ -17,6 +17,8 @@ public enum ErrorCode {
     INVALID_DOB(1008, "Your age must be at least {min}", HttpStatus.BAD_REQUEST),
 
     TABLE_NOT_EXISTED(1009, "Table not existed", HttpStatus.NOT_FOUND),
+    TABLE_CREATION_FAILED(1032, "Table creation failed", HttpStatus.BAD_REQUEST),
+    TABLE_NOT_AVAILABLE(1033, "Table not available", HttpStatus.BAD_REQUEST),
 
     DISH_NOT_EXISTED(1010, "Dish not existed", HttpStatus.NOT_FOUND),
     DISH_NOT_CREATED(1011, "Dish not created", HttpStatus.BAD_REQUEST),
@@ -48,7 +50,9 @@ public enum ErrorCode {
     REPLY_NOT_DELETED(1030, "Reply not deleted", HttpStatus.BAD_REQUEST),
     REPLY_NOT_UPDATED(1031, "Reply not updated", HttpStatus.BAD_REQUEST),
 
-
+    INVALID_BOOKING_TIME(1033, "Booking time must be in the future", HttpStatus.BAD_REQUEST),
+    INVALID_BOOKING_TIME_RANGE(1034, "Booking time must be between 08:00 and 22:00.", HttpStatus.BAD_REQUEST),
+    INVALID_BOOKING_TIME_MIN_MONTH(1035, "Booking cannot be more than 1 month or less than 1 hour in advance.", HttpStatus.BAD_REQUEST),
     ;
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {

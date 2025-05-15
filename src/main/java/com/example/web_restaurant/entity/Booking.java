@@ -19,14 +19,12 @@ public class Booking {
 
     LocalDateTime bookingTime;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "userId")
     User user;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "tableId")
     Table table;
 
-    @OneToOne (mappedBy = "booking", cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-    Bill bill;
 }

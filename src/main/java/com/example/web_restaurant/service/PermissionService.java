@@ -21,11 +21,17 @@ public class PermissionService {
     PermissionMapper permissionMapper;
     PermissionRepository permissionRepository;
 
-    public PermissionResponse create(PermissionRequest request){
+    public PermissionResponse create(PermissionRequest request) {
+        // Kiểm tra null hoặc rỗng
+        if (request.getPermissionName() == null || request.getPermissionName().trim().isEmpty()) {
+            throw new IllegalArgumentException("Permission name cannot be null or empty");
+        }
+
         Permission permission = permissionMapper.toPermission(request);
         permission = permissionRepository.save(permission);
-        return permissionMapper.toPermissionResponse((permission));
+        return permissionMapper.toPermissionResponse(permission);
     }
+
 
     public List<PermissionResponse> getAll(){
         var permissions = permissionRepository.findAll();
@@ -34,5 +40,6 @@ public class PermissionService {
 
     public void delete(String permission){
         permissionRepository.deleteById(permission);
+
     }
 }

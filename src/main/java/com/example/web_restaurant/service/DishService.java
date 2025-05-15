@@ -3,17 +3,12 @@ package com.example.web_restaurant.service;
 import com.example.web_restaurant.dto.request.DishCreationRequest;
 import com.example.web_restaurant.dto.request.DishUpdateRequest;
 import com.example.web_restaurant.dto.response.DishResponse;
-import com.example.web_restaurant.entity.BillDish;
-import com.example.web_restaurant.entity.CategoryDish;
-import com.example.web_restaurant.entity.Dish;
-import com.example.web_restaurant.entity.FeedBack;
+import com.example.web_restaurant.entity.*;
 import com.example.web_restaurant.exception.AppException;
 import com.example.web_restaurant.exception.ErrorCode;
+import com.example.web_restaurant.mapper.CategoryDishMapper;
 import com.example.web_restaurant.mapper.DishMapper;
-import com.example.web_restaurant.repository.BillDishRepository;
-import com.example.web_restaurant.repository.CategoryDishRepository;
-import com.example.web_restaurant.repository.DishRepository;
-import com.example.web_restaurant.repository.FeedBackRepository;
+import com.example.web_restaurant.repository.*;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -21,9 +16,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -31,33 +27,34 @@ import java.util.List;
 @Slf4j
 @FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true )
 public class DishService {
+    private final CategoryDishMapper categoryDishMapper;
     DishRepository dishRepository;
     DishMapper dishMapper;
 
-    BillDishRepository billDishRepository;
     CategoryDishRepository categoryDishRepository;
-    FeedBackRepository feedBackRepository;
 
+    @Transactional
+    @PreAuthorize("hasRole('ADMIN')")
     public DishResponse createDish(DishCreationRequest request){
         Dish dish = dishMapper.toDish(request);
 
-        HashSet<BillDish> billDishes = new HashSet<>();
-        HashSet<FeedBack> feedBacks = new HashSet<>();
-        var categoryDish = categoryDishRepository.findById(request.getCategoryDishId());
-        billDishRepository.findById(request.getBillDishes().toString()).ifPresent(billDishes::add);
-        feedBackRepository.findById(request.getFeedBacks().toString()).ifPresent(feedBacks::add);
-        dish.setFeedBacks(feedBacks);
-        dish.setBillDishes(billDishes);
-        categoryDish.ifPresent(dish::setCategoryDish);
+        CategoryDish categoryDish = categoryDishRepository.findById(request.getCategoryDishId())
+                .orElseThrow(() -> new AppException(ErrorCode.CATEGORY_DISH_NOT_EXISTED));
+
+        dish.setCategoryDish(categoryDish);
 
         try{
             dish = dishRepository.save(dish);
         } catch (Exception exception){
+            log.error("Error when creating dish: {}", exception.getMessage());
             throw new AppException(ErrorCode.DISH_NOT_CREATED);
         }
+
         return dishMapper.toResponse(dish);
     }
 
+    @Transactional(readOnly = true)
+    @PreAuthorize("hasRole('ADMIN')")
     public DishResponse getDishById(String dishId){
         return dishMapper.toResponse(
                 dishRepository.findById(dishId)
@@ -65,6 +62,8 @@ public class DishService {
         );
     }
 
+    @Transactional(readOnly = true)
+    @PreAuthorize("hasRole('ADMIN')")
     public List<DishResponse> getAllDishes(){
         return dishRepository.findAll().stream()
                 .map(dishMapper::toResponse)
@@ -81,18 +80,19 @@ public class DishService {
         }
     }
 
+    @Transactional
+    @PreAuthorize("hasRole('ADMIN')")
     public DishResponse updateDish(DishUpdateRequest request, String dishId){
-        var dish = dishRepository.findById(dishId)
+        Dish dish = dishRepository.findById(dishId)
                 .orElseThrow(() -> new AppException(ErrorCode.DISH_NOT_EXISTED));
-
+        // Set Category Dish to null before mapper
+        dish.setCategoryDish(null);
         dishMapper.updateDish(dish, request);
-        var billDishes = billDishRepository.findAllById(request.getBillDishes());
-        var feedBacks = feedBackRepository.findAllById(request.getFeedBacks());
-        var categoryDish = categoryDishRepository.findById(request.getCategoryDishId());
 
-        dish.setBillDishes(new HashSet<>(billDishes));
-        dish.setFeedBacks(new HashSet<>(feedBacks));
-        categoryDish.ifPresent(dish::setCategoryDish);
+        if (request.getCategoryDishId() != null) {
+            var categoryDish = categoryDishRepository.findById(request.getCategoryDishId());
+            categoryDish.ifPresent(dish::setCategoryDish);
+        }
         try{
             dish = dishRepository.save(dish);
         } catch (Exception exception){
@@ -101,8 +101,15 @@ public class DishService {
         return dishMapper.toResponse(dish);
     }
 
+    @Transactional
+    @PreAuthorize("hasRole('ADMIN')")
     public void deleteDish(String dishId) {
-        dishRepository.deleteById(dishId);
+        Dish dish = dishRepository.findById(dishId)
+                .orElseThrow(() -> new AppException(ErrorCode.DISH_NOT_EXISTED));
+        dish.setCategoryDish(null);
+        dishRepository.save(dish);
+
+        dishRepository.delete(dish);
     }
 
     public List<DishResponse> getDishesWithSorting(String field) {

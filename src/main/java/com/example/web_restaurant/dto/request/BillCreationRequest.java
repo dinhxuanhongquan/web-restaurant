@@ -4,7 +4,6 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDateTime;
-import java.util.Set;
 
 @Builder
 @Data
@@ -14,6 +13,4 @@ import java.util.Set;
 public class BillCreationRequest {
     LocalDateTime billTime;
     String bookingId;
-    Set<String> billDishes;
-    String userId;
 }

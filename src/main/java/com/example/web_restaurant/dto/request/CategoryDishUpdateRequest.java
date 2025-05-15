@@ -14,6 +14,5 @@ public class CategoryDishUpdateRequest {
     String categoryName;
     String categoryDescription;
 
-    Set<String> dishes;
-    String userId;
+//    Set<String> dishes;
 }

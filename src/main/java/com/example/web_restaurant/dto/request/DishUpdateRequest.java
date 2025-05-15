@@ -4,7 +4,6 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.util.List;
-import java.util.Set;
 
 @Data
 @Builder
@@ -16,7 +15,8 @@ public class DishUpdateRequest {
     String dishDescription;
     String dishImage;
     String dishPrice;
-    Set<String> billDishes;
-    Set<String> feedBacks;
+    String nameChef;
+
+//    List<String> feedBacks;
     String categoryDishId;
 }

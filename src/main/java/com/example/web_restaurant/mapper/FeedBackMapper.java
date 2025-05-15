@@ -6,15 +6,17 @@ import com.example.web_restaurant.dto.response.FeedBackResponse;
 import com.example.web_restaurant.entity.FeedBack;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 
-@Mapper(componentModel = "spring", uses = {UserMapper.class, ReplyMappper.class})
+@Mapper(componentModel = "spring", uses = {UserMapper.class})
 public interface FeedBackMapper {
+    @Mapping(target = "user", ignore = true)
     FeedBack toFeedBack(FeedBackCreationRequest request);
 
+    @Mapping(target = "user", source = "user")
     FeedBackResponse toFeedBackResponse(FeedBack feedBack);
 
-    @Mapping(target = "userId", ignore = true)
-    @Mapping(target = "replies", ignore = true)
-    void updateFeedback(FeedBack feedBack, FeedBackUpdateRequest request);
+    @Mapping(target = "user", ignore = true)
+    void updateFeedback(@MappingTarget FeedBack feedBack, FeedBackUpdateRequest request);
 
 }

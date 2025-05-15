@@ -24,5 +24,6 @@ public class TableResponse {
     String tableStatus;
     String tableLocation;
 
-    Set<BookingResponse> bookings;
+//    Set<BookingResponse> bookings;
+    UserResponse user;
 }

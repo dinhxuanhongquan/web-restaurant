@@ -23,7 +23,7 @@ public class DishController {
     DishService dishService;
 
     @PostMapping
-    public ApiResponse<DishResponse> createDish(@RequestBody @Valid DishCreationRequest request) {
+    public ApiResponse<DishResponse> createDish(@RequestBody DishCreationRequest request) {
         return ApiResponse.<DishResponse>builder()
                 .result(dishService.createDish(request))
                 .build();

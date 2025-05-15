@@ -17,11 +17,13 @@ public class BillDish {
 
     Integer quantity;
 
-    @ManyToOne
+    // Add new annotation cascade
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "billId")
     Bill bill;
 
-    @ManyToOne
+    // Add new annotation cascade
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "dishId")
     Dish dish;
 

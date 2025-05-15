@@ -7,11 +7,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface BillDishRepository extends JpaRepository<BillDish, String> {
-    Boolean existsByBillDishName(String billDishName);
-    Boolean existsBillId(String billId);
+    Boolean existsByBill_BillId(String billId);
 
-    Optional<BillDish> findByBillDishName(String billDishName);
-    Optional<BillDish> findByBillId(String billId);
+    Optional<BillDish> findByBill_BillId(String billId);
 
-    List<BillDish> findAllByBillId(String billId);
+    List<BillDish> findAllByBill_BillId(String billId);
 }

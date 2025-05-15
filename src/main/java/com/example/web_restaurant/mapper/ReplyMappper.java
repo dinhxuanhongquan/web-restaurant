@@ -5,12 +5,18 @@ import com.example.web_restaurant.dto.request.ReplyUpdateRequest;
 import com.example.web_restaurant.dto.response.ReplyResponse;
 import com.example.web_restaurant.entity.Reply;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = {UserMapper.class, FeedBackMapper.class})
 public interface ReplyMappper {
+    @Mapping(target = "user", ignore = true)
+    @Mapping(target = "feedBack", ignore = true)
     Reply toReply(ReplyCreationRequest request);
 
+    @Mapping(target = "user", source = "user")
+    @Mapping(target = "feedBack", source = "feedBack")
     ReplyResponse toReplyResponse(Reply reply);
 
-    void updateReply(Reply reply, ReplyUpdateRequest request);
+    void updateReply(@MappingTarget Reply reply, ReplyUpdateRequest request);
 }

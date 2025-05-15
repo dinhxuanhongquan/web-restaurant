@@ -1,12 +1,16 @@
 package com.example.web_restaurant.dto.request;
 
 
+import com.example.web_restaurant.entity.Booking;
+import com.example.web_restaurant.entity.FeedBack;
+import com.example.web_restaurant.entity.Reply;
+import com.example.web_restaurant.entity.Role;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
-import java.util.List;
+import java.util.Set;
 
 @Builder
 @Data
@@ -30,7 +34,8 @@ public class UserCreationRequest {
     String email;
     String phoneNumber;
 
-    List<String> bookings;
-    List<String> feedBacks;
-    List<String> replies;
+//    Set<Booking> bookings;
+//    Set<FeedBack> feedBacks;
+//    Set<Reply> replies;
+    Set<Role> roles;
 }

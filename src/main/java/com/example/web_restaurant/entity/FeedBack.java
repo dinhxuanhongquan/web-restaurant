@@ -23,10 +23,10 @@ public class FeedBack {
     LocalDateTime feedBackTime;
     Integer rating;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "userId")
     User user;
 
-    @OneToMany(mappedBy = "feedBack", cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-    Set<Reply> replies;
+//    @OneToMany(mappedBy = "feedBack", cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+//    Set<Reply> replies;
 }

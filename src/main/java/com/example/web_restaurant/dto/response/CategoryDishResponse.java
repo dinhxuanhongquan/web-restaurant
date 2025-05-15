@@ -1,7 +1,5 @@
 package com.example.web_restaurant.dto.response;
 
-import com.example.web_restaurant.entity.Dish;
-import com.example.web_restaurant.entity.User;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -17,6 +15,6 @@ public class CategoryDishResponse {
     String categoryName;
     String categoryDescription;
 
-    Set<DishResponse> dishes;
-    User user;
+//    Set<DishResponse> dishes;
+    UserResponse user;
 }

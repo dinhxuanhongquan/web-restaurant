@@ -18,7 +18,7 @@ public class DishResponse {
     String dishImage;
     String dishPrice;
 
-    Set<BillDishResponse> billDishes;
-    Set<FeedBackResponse> feedBacks;
+//    Set<BillDishResponse> billDishes;
+//    Set<FeedBackResponse> feedBacks;
     CategoryDishResponse categoryDish;
 }

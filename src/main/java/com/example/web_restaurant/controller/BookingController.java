@@ -23,9 +23,16 @@ public class BookingController {
     BookingService bookingService;
 
     @PostMapping
-    public ApiResponse<BookingResponse> createBooking(@RequestBody @Valid BookingCreationRequest request) {
+    public ApiResponse<BookingResponse> createBooking(@RequestBody BookingCreationRequest request) {
         return ApiResponse.<BookingResponse>builder()
                 .result(bookingService.createBooking(request))
+                .build();
+    }
+
+    @GetMapping("/user")
+    public ApiResponse<List<BookingResponse>> getAllBookingsByUser() {
+        return ApiResponse.<List<BookingResponse>>builder()
+                .result(bookingService.getAllBookingsByUser())
                 .build();
     }
 
@@ -43,12 +50,12 @@ public class BookingController {
                 .build();
     }
 
-    @GetMapping("/{userId}")
-    public ApiResponse<List<BookingResponse>> getAllBookingsByUser(@PathVariable("userId") String userId) {
-        return ApiResponse.<List<BookingResponse>>builder()
-                .result(bookingService.getAllBookingsByUser(userId))
-                .build();
-    }
+//    @GetMapping("/{userId}")
+//    public ApiResponse<List<BookingResponse>> getAllBookingsByUser(@PathVariable("userId") String userId) {
+//        return ApiResponse.<List<BookingResponse>>builder()
+//                .result(bookingService.getAllBookingsByUser())
+//                .build();
+//    }
 
     @GetMapping("/{bookingId}")
     public ApiResponse<BookingResponse> getBookingById(@PathVariable("bookingId") String bookingId) {

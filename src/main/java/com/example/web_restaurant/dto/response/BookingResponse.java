@@ -18,7 +18,7 @@ import java.util.Set;
 public class BookingResponse {
     String bookingId;
     LocalDateTime bookingTime;
-    User user;
-    Table table;
-    Bill bill;
+
+    UserResponse user;
+    TableResponse table;
 }

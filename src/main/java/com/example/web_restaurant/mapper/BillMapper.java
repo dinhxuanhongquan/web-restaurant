@@ -8,13 +8,16 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
-@Mapper(componentModel = "spring", uses = {TableMapper.class, BillDishMapper.class})
+@Mapper(componentModel = "spring", uses = {BookingMapper.class, UserMapper.class})
 public interface BillMapper {
+    @Mapping(target = "booking", ignore = true)
+    @Mapping(target = "user", ignore = true)
     Bill toBill(BillCreationRequest request);
 
+    @Mapping(target = "booking", source = "booking")
+    @Mapping(target = "user", source = "user")
     BillResponse toBillResponse(Bill bill);
 
-    @Mapping(target = "billDishes", ignore = true)
-    @Mapping(target = "table", ignore = true)
+    @Mapping(target = "user", ignore = true)
     void updateBill(@MappingTarget Bill bill, BillUpdateRequest request);
 }

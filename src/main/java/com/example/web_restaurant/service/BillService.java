@@ -4,8 +4,6 @@ import com.example.web_restaurant.dto.request.BillCreationRequest;
 import com.example.web_restaurant.dto.request.BillUpdateRequest;
 import com.example.web_restaurant.dto.response.BillResponse;
 import com.example.web_restaurant.entity.Bill;
-import com.example.web_restaurant.entity.BillDish;
-import com.example.web_restaurant.entity.Table;
 import com.example.web_restaurant.exception.AppException;
 import com.example.web_restaurant.exception.ErrorCode;
 import com.example.web_restaurant.mapper.BillMapper;
@@ -17,9 +15,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
 import java.util.List;
 
 @Service
@@ -31,19 +32,22 @@ public class BillService {
     BillMapper billMapper;
     BookingRepository bookingRepository;
     UserRepository userRepository;
-    BillDishRepository billDishRepository;
 
+    @Transactional
+    @PreAuthorize("hasRole('ADMIN')")
     public BillResponse createBill(BillCreationRequest request) {
         Bill bill = billMapper.toBill(request);
 
-        HashSet<BillDish> billDishes = new HashSet<>();
+//        Get user from token
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        var user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        var booking = bookingRepository.findById(request.getBookingId())
+                .orElseThrow(() -> new AppException(ErrorCode.BOOKING_NOT_EXISTED));
+        bill.setUser(user);
+        bill.setBooking(booking);
 
-        billDishRepository.findById(request.getBillDishes().toString()).ifPresent(billDishes::add);
-        bill.setBillDishes(billDishes);
-        bill.setBooking(bookingRepository.findById(request.getBookingId())
-                .orElseThrow(() -> new AppException(ErrorCode.BOOKING_NOT_EXISTED)));
-        bill.setUser(userRepository.findById(request.getUserId())
-                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED)));
         try {
             bill = billRepository.save(bill);
         } catch (Exception exception) {
@@ -52,6 +56,8 @@ public class BillService {
         return billMapper.toBillResponse(bill);
     }
 
+    @Transactional(readOnly = true)
+    @PreAuthorize("hasRole('ADMIN')")
     public BillResponse getBillById(String billId) {
         return billMapper.toBillResponse(
                 billRepository.findById(billId)
@@ -59,6 +65,8 @@ public class BillService {
         );
     }
 
+    @Transactional(readOnly = true)
+    @PreAuthorize("hasRole('ADMIN')")
     public List<BillResponse> getAllBills() {
         return billRepository.findAll()
                 .stream()
@@ -66,17 +74,34 @@ public class BillService {
                 .toList();
     }
 
+    @Transactional(readOnly = true)
+    public List<BillResponse> getAllBillsByBookingId(String bookingId) {
+        return billRepository.findAllByBooking_BookingId(bookingId)
+                .stream()
+                .map(billMapper::toBillResponse)
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
+    @PreAuthorize("hasRole('ADMIN')")
+    public List<BillResponse> getAllBillsByUserId(String userId) {
+        return billRepository.findAllByUser_UserId(userId)
+                .stream()
+                .map(billMapper::toBillResponse)
+                .toList();
+    }
+
+    @Transactional
+    @PreAuthorize("hasRole('ADMIN')")
     public BillResponse updateBill(String billId, BillUpdateRequest request) {
         Bill bill = billRepository.findById(billId)
                 .orElseThrow(() -> new AppException(ErrorCode.BILL_NOT_EXISTED));
 
         billMapper.updateBill(bill, request);
-        var billDishes = billDishRepository.findAllById(request.getBillDishes());
-        bill.setBillDishes(new HashSet<>(billDishes));
-        bill.setUser(userRepository.findById(request.getUserId())
-                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED)));
-        bill.setBooking(bookingRepository.findById(request.getBookingId())
-                .orElseThrow(() -> new AppException(ErrorCode.BOOKING_NOT_EXISTED)));
+        var booking = bookingRepository.findById(request.getBookingId())
+                .orElseThrow(() -> new AppException(ErrorCode.BOOKING_NOT_EXISTED));
+        bill.setBooking(booking);
+
         try {
             bill = billRepository.save(bill);
         } catch (Exception exception) {
@@ -85,7 +110,13 @@ public class BillService {
         return billMapper.toBillResponse(bill);
     }
 
+    @Transactional
+    @PreAuthorize("hasRole('ADMIN')")
     public void deleteBillById(String billId) {
+        Bill bill = billRepository.findById(billId)
+                .orElseThrow(() -> new AppException(ErrorCode.BILL_NOT_EXISTED));
+        bill.setUser(null);
+        bill.setBooking(null);
         billRepository.deleteById(billId);
     }
 

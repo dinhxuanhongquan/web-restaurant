@@ -1,7 +1,5 @@
 package com.example.web_restaurant.dto.response;
 
-import com.example.web_restaurant.entity.Bill;
-import com.example.web_restaurant.entity.Dish;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -13,6 +11,7 @@ import lombok.experimental.FieldDefaults;
 public class BillDishResponse {
     String billDishId;
     Integer quantity;
-    Bill bill;
-    Dish dish;
+
+    BillResponse bill;
+    DishResponse dish;
 }

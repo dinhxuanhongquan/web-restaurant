@@ -23,7 +23,7 @@ public class TableController {
     TableService tableService;
 
     @PostMapping
-    public ApiResponse<TableResponse> createTable(@RequestBody @Valid TableCreationRequest request) {
+    public ApiResponse<TableResponse> createTable(@RequestBody TableCreationRequest request) {
         return ApiResponse.<TableResponse>builder()
                 .result(tableService.createTable(request))
                 .build();

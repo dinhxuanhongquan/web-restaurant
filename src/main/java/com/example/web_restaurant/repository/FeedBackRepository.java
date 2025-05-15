@@ -3,10 +3,13 @@ package com.example.web_restaurant.repository;
 import com.example.web_restaurant.entity.FeedBack;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface FeedBackRepository extends JpaRepository<FeedBack, String> {
-    boolean existsByFeedBackName(String feedBackName);
+    boolean existsByFeedBackId(String feedBackId);
 
-    Optional<FeedBack> findByFeedBackName(String feedBackName);
+    Optional<FeedBack> findByFeedBackId(String feedBackId);
+
+    List<FeedBack> findAllByUser_UserId(String userId);
 }

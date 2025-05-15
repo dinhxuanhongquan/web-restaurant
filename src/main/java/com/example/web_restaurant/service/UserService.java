@@ -19,6 +19,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.List;
@@ -30,31 +31,18 @@ import java.util.List;
 public class UserService {
     UserRepository userRepository;
     RoleRepository roleRepository;
-    FeedBackRepository feedBackRepository;
-    ReplyRepository replyRepository;
-    BookingRepository bookingRepository;
     UserMapper userMapper;
     PasswordEncoder passwordEncoder;
 
 
+    @Transactional
     public UserResponse createUser(UserCreationRequest request) {
         User user = userMapper.toUser(request);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         HashSet<Role> roles = new HashSet<>();
-        HashSet<FeedBack> feedBacks = new HashSet<>();
-        HashSet<Reply> replies = new HashSet<>();
-        HashSet<Booking> bookings = new HashSet<>();
-
-        roleRepository.findById(PredefinedRole.EMPLOYEE_ROLE).ifPresent(roles::add);
-        feedBackRepository.findById(request.getFeedBacks().toString()).ifPresent(feedBacks::add);
-        replyRepository.findById(request.getReplies().toString()).ifPresent(replies::add);
-        bookingRepository.findById(request.getBookings().toString()).ifPresent(bookings::add);
-
+        roleRepository.findById(PredefinedRole.CUSTOMER_ROLE).ifPresent(roles::add);
         user.setRoles(roles);
-        user.setFeedBacks(feedBacks);
-        user.setReplies(replies);
-        user.setBookings(bookings);
 
         try{
             user = userRepository.save(user);
@@ -65,6 +53,7 @@ public class UserService {
         return userMapper.toUserResponse(user);
     }
 
+    @Transactional
     public UserResponse getInfo(){
         var context = SecurityContextHolder.getContext();
 
@@ -75,11 +64,13 @@ public class UserService {
         return userMapper.toUserResponse(user);
     }
 
+    @Transactional
     @PreAuthorize("hasRole('ADMIN')")
     public List<UserResponse> getAllUsers(){
         return userRepository.findAll().stream().map(userMapper::toUserResponse).toList();
     }
 
+    @Transactional
     @PostAuthorize("returnObject.username == authentication.name")
     public UserResponse getUserById(String userId) {
         return userMapper.toUserResponse(
@@ -87,6 +78,7 @@ public class UserService {
         );
     }
 
+    @Transactional
     @PostAuthorize("returnObject.username == authentication.name")
     public UserResponse update(String userId, UserUpdateRequest request) {
         User user = userRepository.findById(userId).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
@@ -95,19 +87,15 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
         var roles = roleRepository.findAllById(request.getRoles());
-        var feedBacks = feedBackRepository.findAllById(request.getFeedBacks());
-        var replies = replyRepository.findAllById(request.getReplies());
-        var bookings = bookingRepository.findAllById(request.getBookings());
 
         user.setRoles(new HashSet<>(roles));
-        user.setFeedBacks(new HashSet<>(feedBacks));
-        user.setReplies(new HashSet<>(replies));
-        user.setBookings(new HashSet<>(bookings));
+
         return userMapper.toUserResponse(
                 userRepository.save(user)
         );
     }
 
+    @Transactional
     @PreAuthorize("hasRole('ADMIN')")
     public void deleteUser(String userId) {
         userRepository.deleteById(userId);

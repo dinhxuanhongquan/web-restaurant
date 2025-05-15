@@ -17,8 +17,6 @@ public class BillResponse {
     String billId;
     LocalDateTime billTime;
 
-    Booking booking;
-
-    Set<BillDishResponse> billDishes;
-    User user;
+    BookingResponse booking;
+    UserResponse user;
 }

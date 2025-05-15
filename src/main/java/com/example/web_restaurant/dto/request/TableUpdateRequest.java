@@ -11,9 +11,9 @@ import java.util.Set;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class TableUpdateRequest {
     String tableName;
-    String tableSeat;
+    Integer tableSeat;
     String tableKind;
     String tableStatus;
     String tableLocation;
-    Set<String> bookings;
+//    Set<String> bookings;
 }

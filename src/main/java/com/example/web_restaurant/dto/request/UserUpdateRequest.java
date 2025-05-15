@@ -25,8 +25,7 @@ public class UserUpdateRequest {
     String image;
 
     List<String> roles;
-    List<String> bookings;
-    List<String> feedBacks;
-    List<String> replies;
-
+//    List<String> bookings;
+//    List<String> feedBacks;
+//    List<String> replies;
 }

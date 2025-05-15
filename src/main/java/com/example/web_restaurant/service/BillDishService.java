@@ -60,7 +60,7 @@ public class BillDishService {
     }
 
     public List<BillDishResponse> getAllBillDishesByBillId(String billId) {
-        return billDishRepository.findAllByBillId(billId)
+        return billDishRepository.findAllByBill_BillId(billId)
                 .stream()
                 .map(billDishMapper::toBillDishResponse)
                 .toList();

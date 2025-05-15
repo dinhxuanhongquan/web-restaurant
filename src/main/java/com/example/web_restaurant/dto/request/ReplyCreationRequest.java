@@ -14,6 +14,6 @@ public class ReplyCreationRequest {
     String replyContent;
     LocalDateTime replyTime;
 
-    String userId;
+//    String userId;
     String feedbackId;
 }

@@ -8,13 +8,17 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = {DishMapper.class, UserMapper.class})
 public interface CategoryDishMapper {
-    @Mapping(target = "dishes", ignore = true)
+    @Mapping(target = "user", ignore = true)
+//    @Mapping(target = "dishes", ignore = true)
     CategoryDish toCategoryDish(CategoryDishCreationRequest request);
 
+    @Mapping(target = "user", source = "user")
+//    @Mapping(target = "dishes", source = "dishes")
     CategoryDishResponse toCategoryDishResponse(CategoryDish categoryDish);
 
-    @Mapping(target = "dishes", ignore = true)
+//    @Mapping(target = "dishes", ignore = true)
+    @Mapping(target = "user", ignore = true)
     void updateCategoryDish(@MappingTarget CategoryDish categoryDish, CategoryDishUpdateRequest request);
 }

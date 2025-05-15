@@ -20,11 +20,21 @@ public class CategoryDish {
     String categoryName;
     String categoryDescription;
 
-    @OneToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-    Set<Dish> dishes;
+//    @OneToMany(mappedBy = "categoryDish", cascade = CascadeType.ALL, orphanRemoval = true)
+//    Set<Dish> dishes;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "userId")
     User user;
 
+    // Helper method de quan ly quan he
+//    public void addDish(Dish dish) {
+//        this.dishes.add(dish);
+//        dish.setCategoryDish(this);
+//    }
+//
+//    public void removeDish(Dish dish) {
+//        this.dishes.remove(dish);
+//        dish.setCategoryDish(null);
+//    }
 }

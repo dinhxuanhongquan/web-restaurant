@@ -18,6 +18,7 @@ import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
+import jakarta.transaction.Transactional;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -59,17 +60,22 @@ public class AuthenticationService {
 
 
     public IntrospectResponse introspect(IntrospectRequest request){
-        var token = request.getToken();
+        if (request == null || request.getToken() == null || request.getToken().trim().isEmpty()) {
+            return IntrospectResponse.builder().valid(false).build();
+        }
+
         boolean isValid = true;
 
-        try{
-            verifyToken(token, false);
-        } catch (AppException | JOSEException | ParseException e){
+        try {
+            validateTokenNotEmpty(request.getToken(), "Token Introspection");
+            verifyToken(request.getToken(), false);
+        } catch (AppException | JOSEException | ParseException e) {
             isValid = false;
         }
         return IntrospectResponse.builder().valid(isValid).build();
     }
 
+    @Transactional
     public AuthenticationResponse authenticate(AuthenticationRequest request){
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
         var user = userRepository.findByUsername(request.getUsername())
@@ -106,23 +112,20 @@ public class AuthenticationService {
         return signedJWT;
     }
 
-    public void logout(LogoutRequest request) throws ParseException, JOSEException{
-        try{
-            var signToken = verifyToken(request.getToken(), true);
-
-            String jit = signToken.getJWTClaimsSet().getJWTID();
-            Date expiryTime = signToken.getJWTClaimsSet().getExpirationTime();
-
-            InvalidatedToken invalidatedToken = InvalidatedToken.builder()
-                    .id(jit)
-                    .expiryTime(expiryTime)
-                    .build();
-
-            invalidatedRepository.save(invalidatedToken);
-        }catch (AppException exception){
-            log.info("Token already expired");
+    public void logout(LogoutRequest request) throws ParseException, JOSEException {
+        if (request == null || request.getToken() == null || request.getToken().trim().isEmpty()) {
+            log.info("Logout attempted with null or empty token");
+            return;
         }
 
+        try {
+            var signToken = verifyToken(request.getToken(), true);
+            String jit = signToken.getJWTClaimsSet().getJWTID();
+            Date expiryTime = signToken.getJWTClaimsSet().getExpirationTime();
+            invalidateToken(jit, expiryTime);
+        } catch (AppException exception) {
+            log.info("Token already expired");
+        }
     }
 
 
@@ -130,12 +133,14 @@ public class AuthenticationService {
     private String generateToken(User user){
         JWSHeader header = new JWSHeader(JWSAlgorithm.HS512);
 
+        Date now = new Date();
+        Date expiration = new Date(Instant.now().plus(VALID_DURATION, ChronoUnit.SECONDS).toEpochMilli());
+
         JWTClaimsSet jwtClaimsSet = new JWTClaimsSet.Builder()
                 .subject(user.getUsername())
                 .issuer("webrestaurant.com")
-                .issueTime(new Date(
-                        Instant.now().plus(VALID_DURATION, ChronoUnit.SECONDS).toEpochMilli()
-                ))
+                .issueTime(now)
+                .expirationTime(expiration)
                 .jwtID(UUID.randomUUID().toString())
                 .claim("scope", buildScope(user))
                 .build();
@@ -168,21 +173,18 @@ public class AuthenticationService {
     }
 
     public AuthenticationResponse refresh(RefreshRequest request) throws ParseException, JOSEException {
+        if (request == null || request.getToken() == null || request.getToken().trim().isEmpty()) {
+            log.info("Refresh attempted with null or empty token");
+            throw new AppException(ErrorCode.UNAUTHORIZED);
+        }
+
         var signedJWT = verifyToken(request.getToken(), true);
-
         var jit = signedJWT.getJWTClaimsSet().getJWTID();
-
         var expiryTime = signedJWT.getJWTClaimsSet().getExpirationTime();
 
-        InvalidatedToken invalidatedToken = InvalidatedToken.builder()
-                .id(jit)
-                .expiryTime(expiryTime)
-                .build();
-
-        invalidatedRepository.save(invalidatedToken);
+        invalidateToken(jit, expiryTime);
 
         var username = signedJWT.getJWTClaimsSet().getSubject();
-
         var user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new AppException(ErrorCode.UNAUTHENTICATED));
         var token = generateToken(user);
@@ -191,6 +193,32 @@ public class AuthenticationService {
                 .token(token)
                 .authenticated(true)
                 .build();
+    }
+
+    private void validateTokenNotEmpty(String token, String methodName) {
+        if (token == null || token.trim().isEmpty()) {
+            log.info("{} attempted with null or empty token", methodName);
+            throw new AppException(ErrorCode.UNAUTHENTICATED);
+        }
+    }
+
+    private void invalidateToken(String jit, Date expiryTime) {
+        // First check if token already exists
+        if (!invalidatedRepository.existsById(jit)) {
+            try {
+                InvalidatedToken invalidatedToken = InvalidatedToken.builder()
+                        .id(jit)
+                        .expiryTime(expiryTime)
+                        .build();
+                invalidatedRepository.save(invalidatedToken);
+                log.debug("Token {} invalidated successfully", jit);
+            } catch (org.springframework.orm.ObjectOptimisticLockingFailureException e) {
+                // Another thread already invalidated this token
+                log.info("Token {} was already invalidated by another transaction", jit);
+            }
+        } else {
+            log.info("Token {} already exists in invalidated tokens", jit);
+        }
     }
 
 }

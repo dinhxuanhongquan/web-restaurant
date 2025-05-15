@@ -1,5 +1,7 @@
 package com.example.web_restaurant.dto.request;
 
+import com.example.web_restaurant.entity.BillDish;
+import com.example.web_restaurant.entity.FeedBack;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -16,9 +18,9 @@ public class DishCreationRequest {
     String dishDescription;
     String dishImage;
     String dishPrice;
+    String nameChef;
 
-    Set<String> billDishes;
-
-    Set<String> feedBacks;
     String categoryDishId;
+//    Set<BillDish> billDishes;
+//    Set<FeedBack> feedBacks;
 }

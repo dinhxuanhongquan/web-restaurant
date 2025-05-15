@@ -2,19 +2,30 @@ server:
   port: 8000
   servlet:
     context-path: /restaurant
-    
+
 spring:
   datasource:
-    url: ${DBMS_CONNECTION:jdbc:mysql://localhost:3306/web_restaurant}
+    url: ${DBMS_CONNECTION:jdbc:mysql://localhost:3306/restaurant}
     username: ${DBMS_USERNAME:root}
-    password: ${DBMS:090203Qu@n}
-    driver-class-name: "com.mysql.cj.jdbc.Driver"
+    password: ${DBMS_PASSWORD:090203Qu@n}
+    driverClassName: "com.mysql.cj.jdbc.Driver"
+    hikari:
+      connection-init-sql: SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci
   jpa:
     hibernate:
       ddl-auto: update
+    properties:
+      hibernate:
+        connection:
+          characterEncoding: utf8mb4
+          useUnicode: true
+          charset: UTF-8
     show-sql: true
+    generate-ddl: true
+    open-in-view: false
+
 
 jwt:
   signerKey: "cnK4l5lXAr5UxnxGERFSPJBhlnBw+piih4Mx8INjrEYbMvOm3zQiiqyDsnsq5MqJ"
-  valid-duration: 3600 #in seconds.
+  valid-duration: 36000 #in seconds.
   refreshable-duration: 36000 #in seconds.

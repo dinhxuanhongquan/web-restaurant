@@ -19,7 +19,7 @@ public class PermissionController {
     PermissionService permissionService;
 
     @PostMapping
-    ApiResponse<PermissionResponse> create(@RequestBody PermissionRequest request){
+    ApiResponse<PermissionResponse> createPermission(@RequestBody PermissionRequest request){
         return ApiResponse.<PermissionResponse>builder()
                 .result(permissionService.create(request))
                 .build();

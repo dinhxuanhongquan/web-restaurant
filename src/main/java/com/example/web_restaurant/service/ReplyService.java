@@ -17,6 +17,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,8 +35,13 @@ public class ReplyService {
 
     public ReplyResponse createReply(ReplyCreationRequest request) {
         Reply reply = replyMappper.toReply(request);
-        reply.setUser(userRepository.findById(request.getUserId())
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+
+        reply.setUser(userRepository.findByUsername(username)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED)));
+
         reply.setFeedBack(feedBackRepository.findById(request.getFeedbackId())
                 .orElseThrow(() -> new AppException(ErrorCode.FEEDBACK_NOT_EXISTED)));
 
@@ -53,7 +60,7 @@ public class ReplyService {
         );
     }
     public List<ReplyResponse> getAllReplies(String feedBackId) {
-        return replyRepository.findAllByFeedBackId(feedBackId)
+        return replyRepository.findAllByFeedBack_FeedBackId(feedBackId)
                 .stream()
                 .map(replyMappper::toReplyResponse)
                 .toList();
@@ -63,10 +70,7 @@ public class ReplyService {
         Reply reply = replyRepository.findById(replyId)
                 .orElseThrow(() -> new AppException(ErrorCode.REPLY_NOT_EXISTED));
         replyMappper.updateReply(reply, request);
-        reply.setFeedBack(feedBackRepository.findById(request.getFeedbackId())
-                .orElseThrow(() -> new AppException(ErrorCode.FEEDBACK_NOT_EXISTED)));
-        reply.setUser(userRepository.findById(request.getUserId())
-                .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED)));
+
         try {
             reply = replyRepository.save(reply);
         } catch (Exception exception) {

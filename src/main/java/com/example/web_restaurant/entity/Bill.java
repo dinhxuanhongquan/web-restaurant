@@ -20,14 +20,16 @@ public class Bill {
 
     LocalDateTime billTime;
 
-    @OneToOne
+    // Add new annotation cascade
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "bookingId")
     Booking booking;
 
-    @OneToMany(mappedBy = "bill", cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-    Set<BillDish> billDishes;
+//    @OneToMany(mappedBy = "bill", cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+//    Set<BillDish> billDishes;
 
-    @ManyToOne
+    // Add new annotation cascade
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "userId")
     User user;
 }

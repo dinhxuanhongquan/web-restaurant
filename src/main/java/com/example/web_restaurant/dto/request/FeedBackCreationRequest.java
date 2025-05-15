@@ -1,5 +1,6 @@
 package com.example.web_restaurant.dto.request;
 
+import com.example.web_restaurant.entity.Reply;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -15,6 +16,6 @@ public class FeedBackCreationRequest {
     String feedBackContent;
     LocalDateTime  feedBackTime;
     Integer rating;
-    String userId;
-    Set<String> replies;
+//    String userId;
+//    Set<Reply> replies;
 }

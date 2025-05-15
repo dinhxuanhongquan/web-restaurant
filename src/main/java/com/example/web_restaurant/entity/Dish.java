@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.util.Set;
 
 @Getter
 @Setter
@@ -21,14 +20,17 @@ public class Dish {
     String dishDescription;
     String dishImage;
     String dishPrice;
+    String nameChef;
 
-    @OneToMany(mappedBy = "dish", cascade = CascadeType.ALL, orphanRemoval = true)
-    Set<BillDish> billDishes;
+//    @OneToMany(mappedBy = "dish", cascade = CascadeType.ALL, orphanRemoval = true)
+//    Set<BillDish> billDishes;
+//
+//    @OneToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, orphanRemoval = true)
+//    Set<FeedBack> feedBacks;
 
-    @OneToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-    Set<FeedBack> feedBacks;
-
-    @OneToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "categoryId")
     CategoryDish categoryDish;
+
+
 }

@@ -21,6 +21,6 @@ public class FeedBackResponse {
     LocalDateTime feedBackTime;
     Integer rating;
 
-    User user;
-    Set<ReplyResponse> replies;
+    UserResponse user;
+//    Set<ReplyResponse> replies;
 }

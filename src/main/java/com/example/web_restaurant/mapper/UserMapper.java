@@ -15,9 +15,9 @@ public interface UserMapper {
     UserResponse toUserResponse(User user);
 
     @Mapping(target = "roles", ignore = true)
-    @Mapping(target = "replies", ignore = true)
-    @Mapping(target = "bookings", ignore = true)
-    @Mapping(target = "feedBacks", ignore = true)
+//    @Mapping(target = "replies", ignore = true)
+//    @Mapping(target = "bookings", ignore = true)
+//    @Mapping(target = "feedBacks", ignore = true)
     void updateUser(@MappingTarget User user, UserUpdateRequest request);
 
 }

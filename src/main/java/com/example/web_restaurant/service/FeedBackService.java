@@ -20,6 +20,8 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -36,12 +38,16 @@ public class FeedBackService {
     FeedBackMapper feedBackMapper;
 
     public FeedBackResponse createFeedBack(FeedBackCreationRequest request){
-        User user = userRepository.findById(request.getUserId())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        // Get user from the token
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+
+        User user = userRepository.findByUsername(username).orElseThrow(
+                () -> new AppException(ErrorCode.USER_NOT_EXISTED)
+        );
+
         FeedBack feedBack = feedBackMapper.toFeedBack(request);
-        HashSet<Reply> replies = new HashSet<>();
-        replyRepository.findById(request.getReplies().toString()).ifPresent(replies::add);
-        feedBack.setReplies(replies);
+
         feedBack.setUser(user);
         try {
             feedBack = feedBackRepository.save(feedBack);
@@ -53,6 +59,13 @@ public class FeedBackService {
 
     public List<FeedBackResponse> getAllFeedBacks(){
         return feedBackRepository.findAll()
+                .stream()
+                .map(feedBackMapper::toFeedBackResponse)
+                .toList();
+    }
+
+    public List<FeedBackResponse> getAllFeedBacksByUserId(String userId) {
+        return feedBackRepository.findAllByUser_UserId(userId)
                 .stream()
                 .map(feedBackMapper::toFeedBackResponse)
                 .toList();
@@ -71,9 +84,7 @@ public class FeedBackService {
                 () -> new AppException(ErrorCode.FEEDBACK_NOT_EXISTED)
         );
         feedBackMapper.updateFeedback(feedBack, request);
-        var replies = replyRepository.findAllById(request.getReplies());
 
-        feedBack.setReplies(new HashSet<>(replies));
         return feedBackMapper.toFeedBackResponse(feedBackRepository.save(feedBack));
     }
 
