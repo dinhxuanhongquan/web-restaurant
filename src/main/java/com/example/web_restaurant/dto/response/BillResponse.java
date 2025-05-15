@@ -16,7 +16,7 @@ import java.util.Set;
 public class BillResponse {
     String billId;
     LocalDateTime billTime;
-
+    Boolean billStatus;
     BookingResponse booking;
     UserResponse user;
 }

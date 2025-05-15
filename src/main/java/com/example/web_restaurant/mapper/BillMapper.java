@@ -12,12 +12,15 @@ import org.mapstruct.MappingTarget;
 public interface BillMapper {
     @Mapping(target = "booking", ignore = true)
     @Mapping(target = "user", ignore = true)
+    @Mapping(target = "billTime", ignore = true)
     Bill toBill(BillCreationRequest request);
 
     @Mapping(target = "booking", source = "booking")
     @Mapping(target = "user", source = "user")
+    @Mapping(target = "billStatus", source = "billStatus")
     BillResponse toBillResponse(Bill bill);
 
     @Mapping(target = "user", ignore = true)
+    @Mapping(target = "billTime", ignore = true)
     void updateBill(@MappingTarget Bill bill, BillUpdateRequest request);
 }

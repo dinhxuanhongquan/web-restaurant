@@ -23,7 +23,7 @@ public class BillController {
     BillService billService;
 
     @PostMapping
-    public ApiResponse<BillResponse> createBill(@RequestBody @Valid BillCreationRequest request) {
+    public ApiResponse<BillResponse> createBill(@RequestBody BillCreationRequest request) {
         return ApiResponse.<BillResponse>builder()
                 .result(billService.createBill(request))
                 .build();
@@ -67,7 +67,7 @@ public class BillController {
 
     @PutMapping("/{billId}")
     public ApiResponse<BillResponse> updateBill(@PathVariable("billId") String billId,
-                                                @RequestBody @Valid BillUpdateRequest request) {
+                                                @RequestBody BillUpdateRequest request) {
         return ApiResponse.<BillResponse>builder()
                 .result(billService.updateBill(billId, request))
                 .build();

@@ -19,14 +19,12 @@ public class Bill {
     String billId;
 
     LocalDateTime billTime;
+    Boolean billStatus;
 
     // Add new annotation cascade
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "bookingId")
     Booking booking;
-
-//    @OneToMany(mappedBy = "bill", cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-//    Set<BillDish> billDishes;
 
     // Add new annotation cascade
     @ManyToOne(cascade = CascadeType.ALL)

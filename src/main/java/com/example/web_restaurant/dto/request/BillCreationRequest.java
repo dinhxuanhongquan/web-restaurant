@@ -11,6 +11,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class BillCreationRequest {
-    LocalDateTime billTime;
+    Boolean billStatus;
     String bookingId;
 }

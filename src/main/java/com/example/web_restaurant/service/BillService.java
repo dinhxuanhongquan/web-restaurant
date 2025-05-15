@@ -4,6 +4,8 @@ import com.example.web_restaurant.dto.request.BillCreationRequest;
 import com.example.web_restaurant.dto.request.BillUpdateRequest;
 import com.example.web_restaurant.dto.response.BillResponse;
 import com.example.web_restaurant.entity.Bill;
+import com.example.web_restaurant.entity.Booking;
+import com.example.web_restaurant.entity.User;
 import com.example.web_restaurant.exception.AppException;
 import com.example.web_restaurant.exception.ErrorCode;
 import com.example.web_restaurant.mapper.BillMapper;
@@ -21,6 +23,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -41,13 +44,13 @@ public class BillService {
 //        Get user from token
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
-        var user = userRepository.findByUsername(username)
+        User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
-        var booking = bookingRepository.findById(request.getBookingId())
+        Booking booking = bookingRepository.findById(request.getBookingId())
                 .orElseThrow(() -> new AppException(ErrorCode.BOOKING_NOT_EXISTED));
         bill.setUser(user);
         bill.setBooking(booking);
-
+        bill.setBillTime(LocalDateTime.now());
         try {
             bill = billRepository.save(bill);
         } catch (Exception exception) {
@@ -98,10 +101,10 @@ public class BillService {
                 .orElseThrow(() -> new AppException(ErrorCode.BILL_NOT_EXISTED));
 
         billMapper.updateBill(bill, request);
-        var booking = bookingRepository.findById(request.getBookingId())
+        Booking booking = bookingRepository.findById(request.getBookingId())
                 .orElseThrow(() -> new AppException(ErrorCode.BOOKING_NOT_EXISTED));
         bill.setBooking(booking);
-
+        bill.setBillTime(LocalDateTime.now());
         try {
             bill = billRepository.save(bill);
         } catch (Exception exception) {
