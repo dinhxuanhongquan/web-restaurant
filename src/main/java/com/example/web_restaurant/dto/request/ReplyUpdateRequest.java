@@ -11,7 +11,5 @@ import lombok.experimental.FieldDefaults;
 public class ReplyUpdateRequest {
     String replyContent;
     String replyTime;
-
-//    String userId;
-//    String feedbackId;
+    String feedbackId;
 }

@@ -12,5 +12,5 @@ public interface ReplyRepository extends JpaRepository<Reply, String> {
 
     Optional<Reply> findByReplyId(String replyId);
     List<Reply> findAllByFeedBack_FeedBackId(String feedBackId);
-
+    List<Reply> findAllByUser_Username(String username);
 }

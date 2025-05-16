@@ -13,7 +13,5 @@ import java.time.LocalDateTime;
 public class ReplyCreationRequest {
     String replyContent;
     LocalDateTime replyTime;
-
-//    String userId;
     String feedbackId;
 }

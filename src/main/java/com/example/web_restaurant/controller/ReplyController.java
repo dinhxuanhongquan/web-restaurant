@@ -23,18 +23,33 @@ public class ReplyController {
     ReplyService replyService;
 
     @PostMapping
-    public ApiResponse<ReplyResponse> replyFeedBack(@RequestBody @Valid ReplyCreationRequest request) {
+    public ApiResponse<ReplyResponse> replyFeedBack(@RequestBody ReplyCreationRequest request) {
         return ApiResponse.<ReplyResponse>builder()
                 .result(replyService.createReply(request))
                 .build();
     }
 
-    @GetMapping("/{feedBackId}")
-    public ApiResponse<List<ReplyResponse>> getAllReplies(@PathVariable("feedBackId") String feedBackId) {
+    @GetMapping
+    public ApiResponse<List<ReplyResponse>> getAllReplies() {
         return ApiResponse.<List<ReplyResponse>>builder()
-                .result(replyService.getAllReplies(feedBackId))
+                .result(replyService.getAllReplies())
                 .build();
     }
+
+    @GetMapping("/feedback/{feedBackId}")
+    public ApiResponse<List<ReplyResponse>> getAllReplies(@PathVariable("feedBackId") String feedBackId) {
+        return ApiResponse.<List<ReplyResponse>>builder()
+                .result(replyService.getAllRepliesByFeedBack(feedBackId))
+                .build();
+    }
+
+    @GetMapping("/user")
+    public ApiResponse<List<ReplyResponse>> getAllRepliesByUser() {
+        return ApiResponse.<List<ReplyResponse>>builder()
+                .result(replyService.getAllRepliesByUser())
+                .build();
+    }
+
 
     @GetMapping("/{replyId}")
     public ApiResponse<ReplyResponse> getReplyById(@PathVariable("replyId") String replyId) {

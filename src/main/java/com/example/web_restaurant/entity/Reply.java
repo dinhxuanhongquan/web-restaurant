@@ -20,12 +20,10 @@ public class Reply {
     String replyContent;
     LocalDateTime replyTime;
 
-    // Add new annotation cascade
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "userId")
     User user;
 
-    // Add new annotation cascade
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "feedBackId")
     FeedBack feedBack;

@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 @Builder
 @FieldDefaults(level =  AccessLevel.PRIVATE)
 public class ReplyResponse {
+    String replyId;
     String replyContent;
     LocalDateTime replyTime;
 
