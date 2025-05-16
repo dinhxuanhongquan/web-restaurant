@@ -13,8 +13,6 @@ import java.util.Set;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class FeedBackUpdateRequest {
     String feedBackContent;
-    LocalDateTime feedBackTime;
     Integer rating;
-//    String userId;
-//    Set<String> replies;
+    String dishId;
 }

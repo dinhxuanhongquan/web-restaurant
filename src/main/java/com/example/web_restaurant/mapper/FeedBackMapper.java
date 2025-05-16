@@ -11,12 +11,17 @@ import org.mapstruct.MappingTarget;
 @Mapper(componentModel = "spring", uses = {UserMapper.class})
 public interface FeedBackMapper {
     @Mapping(target = "user", ignore = true)
+    @Mapping(target = "dish", ignore = true)
+    @Mapping(target = "feedBackTime", ignore = true)
     FeedBack toFeedBack(FeedBackCreationRequest request);
 
     @Mapping(target = "user", source = "user")
+    @Mapping(target = "dish", source = "dish")
     FeedBackResponse toFeedBackResponse(FeedBack feedBack);
 
     @Mapping(target = "user", ignore = true)
+    @Mapping(target = "dish", ignore = true)
+    @Mapping(target = "feedBackTime", ignore = true)
     void updateFeedback(@MappingTarget FeedBack feedBack, FeedBackUpdateRequest request);
 
 }

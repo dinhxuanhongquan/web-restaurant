@@ -1,11 +1,7 @@
 package com.example.web_restaurant.dto.request;
 
-import com.example.web_restaurant.entity.Reply;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-
-import java.time.LocalDateTime;
-import java.util.Set;
 
 @Builder
 @Data
@@ -14,8 +10,6 @@ import java.util.Set;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class FeedBackCreationRequest {
     String feedBackContent;
-    LocalDateTime  feedBackTime;
     Integer rating;
-//    String userId;
-//    Set<Reply> replies;
+    String dishId;
 }

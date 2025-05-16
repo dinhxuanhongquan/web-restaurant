@@ -22,7 +22,6 @@ import java.util.List;
 @FieldDefaults( level = AccessLevel.PRIVATE, makeFinal = true)
 public class FeedBackController {
     FeedBackService feedBackService;
-    ReplyService replyService;
 
     @PostMapping
     public ApiResponse<FeedBackResponse> createFeedBack(@RequestBody @Valid FeedBackCreationRequest request) {
@@ -38,10 +37,10 @@ public class FeedBackController {
                 .build();
     }
 
-    @GetMapping("/{userId}")
-    public ApiResponse<List<FeedBackResponse>> getAllFeedBacksByUserId(@PathVariable("userId") String userId) {
+    @GetMapping("/user")
+    public ApiResponse<List<FeedBackResponse>> getAllFeedBacksByUserId() {
         return ApiResponse.<List<FeedBackResponse>>builder()
-                .result(feedBackService.getAllFeedBacksByUserId(userId))
+                .result(feedBackService.getAllFeedBacksByUserId())
                 .build();
     }
 
@@ -54,8 +53,8 @@ public class FeedBackController {
 
     @PutMapping("/{feedBackId}")
     public ApiResponse<FeedBackResponse> updateFeedBack(
-            @RequestBody @Valid FeedBackUpdateRequest request, @
-            PathVariable("feedBackId") String feedBackId) {
+            @RequestBody @Valid FeedBackUpdateRequest request,
+            @PathVariable("feedBackId") String feedBackId) {
         return ApiResponse.<FeedBackResponse>builder()
                 .result(feedBackService.updateFeedBack(feedBackId, request))
                 .build();
