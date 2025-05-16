@@ -17,7 +17,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -31,6 +33,8 @@ public class BillDishService {
     BillRepository billRepository;
     DishRepository dishRepository;
 
+    @Transactional
+    @PreAuthorize("hasRole('ADMIN')")
     public BillDishResponse createDillDish(BillDishCreationRequest request) {
         BillDish billDish = billDishMapper.toBillDish(request);
 
@@ -46,12 +50,17 @@ public class BillDishService {
         return billDishMapper.toBillDishResponse(billDish);
     }
 
+    @Transactional( readOnly = true)
+    @PreAuthorize("hasRole('ADMIN')")
     public BillDishResponse getBillDishById(String billDishId) {
         return billDishMapper.toBillDishResponse(
                 billDishRepository.findById(billDishId)
                         .orElseThrow(() -> new AppException(ErrorCode.BILLDISH_NOT_EXISTED))
         );
     }
+
+    @Transactional( readOnly = true)
+    @PreAuthorize("hasRole('ADMIN')")
     public List<BillDishResponse> getAllBillDishes() {
         return billDishRepository.findAll()
                 .stream()
@@ -59,6 +68,7 @@ public class BillDishService {
                 .toList();
     }
 
+    @Transactional( readOnly = true)
     public List<BillDishResponse> getAllBillDishesByBillId(String billId) {
         return billDishRepository.findAllByBill_BillId(billId)
                 .stream()
@@ -66,6 +76,8 @@ public class BillDishService {
                 .toList();
     }
 
+    @Transactional
+    @PreAuthorize("hasRole('ADMIN')")
     public BillDishResponse updateBillDish(String billDishId, BillDishUpdateRequest request) {
         BillDish billDish = billDishRepository.findById(billDishId).orElseThrow(() -> new AppException(ErrorCode.BILLDISH_NOT_EXISTED));
         billDishMapper.updateBillDish(billDish, request);
@@ -81,9 +93,13 @@ public class BillDishService {
         return billDishMapper.toBillDishResponse(billDish);
     }
 
+    @Transactional
+    @PreAuthorize("hasRole('ADMIN')")
     public void deleteBillDish(String billDishId) {
         BillDish billDish = billDishRepository.findById(billDishId).orElseThrow(() -> new AppException(ErrorCode.BILLDISH_NOT_EXISTED));
         try {
+            billDish.setBill(null);
+            billDish.setDish(null);
             billDishRepository.delete(billDish);
         } catch (Exception exception) {
             throw new AppException(ErrorCode.BILL_NOT_DELETED);

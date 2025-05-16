@@ -18,5 +18,7 @@ public interface BillDishMapper {
     @Mapping(target = "dish", source = "dish")
     BillDishResponse toBillDishResponse(BillDish billDish);
 
+    @Mapping(target = "bill", ignore = true)
+    @Mapping(target = "dish", ignore = true)
     void updateBillDish(@MappingTarget BillDish billDish, BillDishUpdateRequest request);
 }

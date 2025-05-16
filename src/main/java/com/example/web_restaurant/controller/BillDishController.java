@@ -36,7 +36,7 @@ public class BillDishController {
                 .build();
     }
 
-    @GetMapping("/{billId}")
+    @GetMapping("/bills/{billId}")
     public ApiResponse<List<BillDishResponse>> getAllBillDishesByBillId(@PathVariable("billId") String billId) {
         return ApiResponse.<List<BillDishResponse>>builder()
                 .result(billDishService.getAllBillDishesByBillId(billId))
