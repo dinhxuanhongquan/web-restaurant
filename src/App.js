@@ -8,6 +8,8 @@ import Contact from './components/Contact/Contact';
 import Footer from './components/Footer/Footer';
 import Login from './components/Login/Login';
 import AdminPanel from './components/Admin/AdminPanel';
+import GoogleMap from './components/GoogleMap/GoogleMap';
+
 
 function App() {
   const [isLoginOpen, setIsLoginOpen] = useState(false);
@@ -17,10 +19,7 @@ function App() {
   const handleLogin = (userData) => {
     setUser(userData);
     setIsLoginOpen(false);
-    
-    if (userData.isAdmin) {
-      setIsAdminPanelOpen(true);
-    }
+    // Không cần mở thanh Admin nếu không cần thiết
   };
 
   const handleLogout = () => {
@@ -33,7 +32,7 @@ function App() {
         setIsLoginOpen={setIsLoginOpen} 
         user={user} 
         onLogout={handleLogout} 
-        setIsAdminPanelOpen={setIsAdminPanelOpen} 
+        setIsAdminPanelOpen={() => setIsAdminPanelOpen(true)} // Đổi tên prop cho khớp
       />
       <Hero />
       <Menu 
@@ -43,7 +42,7 @@ function App() {
       <About />
       <Contact />
       <Footer />
-      
+      <GoogleMap />
       {isLoginOpen && (
         <Login 
           setIsLoginOpen={setIsLoginOpen} 

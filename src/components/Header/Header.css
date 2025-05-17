@@ -103,6 +103,20 @@
     color: white;
   }
 
+.admin-btn {
+  background: #d4833b;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  margin-left: 10px;
+  cursor: pointer;
+  font-weight: bold;
+}
+.admin-btn:hover {
+  background: #b96a25;
+}
+
 @media (max-width: 768px){
     .nav-menu {
         position: absolute;

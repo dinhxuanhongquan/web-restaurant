@@ -1,15 +1,11 @@
 import React, { useState } from "react";
 import './Header.css';
 
-const Header = ({ setIsLoginOpen, user, onLogout, isAdmin, toggleAdminPanel }) => {
+const Header = ({ setIsLoginOpen, user, onLogout, setIsAdminPanelOpen }) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
-    };
-
-    const handleLogin = () => {
-        setIsLoginOpen(true);
     };
 
     return (
@@ -17,7 +13,7 @@ const Header = ({ setIsLoginOpen, user, onLogout, isAdmin, toggleAdminPanel }) =
             <div className="container">
                 <div className="header-wrapper">
                     <div className="logo">
-                        <h1>La Delizioso</h1>
+                        <h1>My Restaurant</h1>
                     </div>
                     <div className={`nav-menu ${isMenuOpen ? 'active' : ''}`}>
                         <ul className="nav-list">
@@ -25,13 +21,13 @@ const Header = ({ setIsLoginOpen, user, onLogout, isAdmin, toggleAdminPanel }) =
                             <li><a href="#menu">Menu</a></li>
                             <li><a href="#about">About us</a></li>
                             <li><a href="#contact">Contact</a></li>
-                            {isAdmin && (
+                            {user?.isAdmin && (
                                 <li>
                                     <button 
-                                        className="manager-btn" 
-                                        onClick={toggleAdminPanel}
+                                        className="admin-btn" 
+                                        onClick={setIsAdminPanelOpen}
                                     >
-                                        Manager
+                                        Quản trị
                                     </button>
                                 </li>
                             )}
@@ -40,16 +36,17 @@ const Header = ({ setIsLoginOpen, user, onLogout, isAdmin, toggleAdminPanel }) =
                     <div className="mobile-menu" onClick={toggleMenu}>
                         <div className={`hambuger ${isMenuOpen ? 'active' : ''}`}></div>
                     </div>
-                    {user ? (
-                        <div className="user-controls">
-                            <div className="user-welcome">Hi, {user.username}</div>
-                            <button className="logout-btn" onClick={onLogout}>Logout</button>
-                        </div>
-                    ) : (
-                        <div className="login-btn" onClick={handleLogin}>
-                            Login
-                        </div>
-                    )}
+                    <div className="user-controls">
+                        {!user ? (
+                            <div className="login-btn" onClick={() => setIsLoginOpen(true)}>
+                                Đăng nhập
+                            </div>
+                        ) : (
+                            <div className="user-welcome">Hi, {user.username}
+                                <button className="logout-btn" onClick={onLogout}>Đăng xuất</button>
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
         </header>   
