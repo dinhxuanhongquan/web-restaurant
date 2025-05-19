@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './App.css';
 import Header from './components/Header/Header';
 import Hero from './components/Hero/Hero';
@@ -9,12 +9,32 @@ import Footer from './components/Footer/Footer';
 import Login from './components/Login/Login';
 import AdminPanel from './components/Admin/AdminPanel';
 import GoogleMap from './components/GoogleMap/GoogleMap';
+import ProfilePage from './components/ProfilePage/ProfilePage';
+import { getCurrentUser, logoutUser } from './services/authService';
 
 
 function App() {
+  const [user, setUser] = useState(null);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isAdminPanelOpen, setIsAdminPanelOpen] = useState(false);
-  const [user, setUser] = useState(null); // null means not logged in
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+
+  useEffect(() => {
+    // Check if user is already authenticated
+    const userInfo = getCurrentUser();
+    if (userInfo) {
+      setUser(userInfo);
+    }
+  }, []);
+
+  const handleLogout = () => {
+    logoutUser();
+    setUser(null);
+    // If admin panel is open, close it
+    if (isAdminPanelOpen) {
+      setIsAdminPanelOpen(false);
+    }
+  };
 
   const handleLogin = (userData) => {
     setUser(userData);
@@ -22,8 +42,20 @@ function App() {
     // Không cần mở thanh Admin nếu không cần thiết
   };
 
-  const handleLogout = () => {
-    setUser(null);
+  const handleOpenAdminPanel = () => {
+    setIsAdminPanelOpen(true);
+  };
+
+  const handleCloseAdminPanel = () => {
+    setIsAdminPanelOpen(false);
+  };
+
+  const handleOpenProfile = () => {
+    setIsProfileOpen(true);
+  };
+
+  const handleCloseProfile = () => {
+    setIsProfileOpen(false);
   };
 
   return (
@@ -31,8 +63,9 @@ function App() {
       <Header 
         setIsLoginOpen={setIsLoginOpen} 
         user={user} 
-        onLogout={handleLogout} 
-        setIsAdminPanelOpen={() => setIsAdminPanelOpen(true)} // Đổi tên prop cho khớp
+        onLogout={handleLogout}
+        setIsAdminPanelOpen={handleOpenAdminPanel}
+        setIsProfileOpen={handleOpenProfile} 
       />
       <Hero />
       <Menu 
@@ -51,7 +84,11 @@ function App() {
       )}
       
       {isAdminPanelOpen && user?.isAdmin && (
-        <AdminPanel onClose={() => setIsAdminPanelOpen(false)} />
+        <AdminPanel onClose={handleCloseAdminPanel} />
+      )}
+      
+      {isProfileOpen && user && (
+        <ProfilePage onClose={handleCloseProfile} user={user} />
       )}
     </div>
   );

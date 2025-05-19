@@ -1,11 +1,40 @@
 import React, { useState } from "react";
 import './Header.css';
+import axios from "axios";
 
-const Header = ({ setIsLoginOpen, user, onLogout, setIsAdminPanelOpen }) => {
+const Header = ({ 
+    setIsLoginOpen, 
+    user, 
+    onLogout: logoutHandler, 
+    setIsAdminPanelOpen,
+    setIsProfileOpen 
+}) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
+    };
+
+    const handleLogout = async () => {
+        const token = localStorage.getItem('token');
+        if (!token) return;
+        
+        try {
+            await axios.post(
+                `http://localhost:8000/restaurant/auth/logout`, 
+                {}, // empty request body
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            );
+            alert("Logout successful");
+            localStorage.removeItem('token');
+            logoutHandler(); // Call the prop function from parent
+        } catch (error) {
+            console.error("Logout failed:", error);
+        }
     };
 
     return (
@@ -42,8 +71,17 @@ const Header = ({ setIsLoginOpen, user, onLogout, setIsAdminPanelOpen }) => {
                                 Đăng nhập
                             </div>
                         ) : (
-                            <div className="user-welcome">Hi, {user.username}
-                                <button className="logout-btn" onClick={onLogout}>Đăng xuất</button>
+                            <div className="user-welcome">
+                                Hi, {user.username}
+                                <div className="user-dropdown">
+                                    <button className="user-menu-btn">
+                                        <i className="fa fa-user"></i> {/* Thêm FontAwesome nếu có */}
+                                    </button>
+                                    <div className="user-dropdown-content">
+                                        <button onClick={() => setIsProfileOpen(true)}>Tài khoản của tôi</button>
+                                        <button className="logout-btn" onClick={handleLogout}>Đăng xuất</button>
+                                    </div>
+                                </div>
                             </div>
                         )}
                     </div>
