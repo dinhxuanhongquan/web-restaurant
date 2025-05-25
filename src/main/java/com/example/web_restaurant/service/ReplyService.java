@@ -38,6 +38,7 @@ public class ReplyService {
     FeedBackRepository feedBackRepository;
 
     @Transactional
+    @PreAuthorize("hasRole('ADMIN')")
     public ReplyResponse createReply(ReplyCreationRequest request) {
         Reply reply = replyMapper.toReply(request);
 
@@ -76,7 +77,6 @@ public class ReplyService {
     }
 
     @Transactional(readOnly = true)
-    @PreAuthorize("hasRole('ADMIN')")
     public List<ReplyResponse> getAllRepliesByFeedBack(String feedBackId) {
         return replyRepository.findAllByFeedBack_FeedBackId(feedBackId)
                 .stream()

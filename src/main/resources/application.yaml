@@ -23,7 +23,24 @@ spring:
     show-sql: true
     generate-ddl: true
     open-in-view: false
-
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${MAIL_USERNAME:quandinh.09022003@gmail.com}
+    password: rkhy dsrm znwu xjda
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+        socketFactory:
+            class: javax.net.ssl.SSLSocketFactory
+            fallback: false
+            port: 587
+        ssl:
+            trust: smtp.gmail.com
 
 jwt:
   signerKey: "cnK4l5lXAr5UxnxGERFSPJBhlnBw+piih4Mx8INjrEYbMvOm3zQiiqyDsnsq5MqJ"

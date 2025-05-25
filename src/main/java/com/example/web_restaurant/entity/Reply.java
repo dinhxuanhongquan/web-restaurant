@@ -17,7 +17,10 @@ public class Reply {
     @Id @GeneratedValue( strategy = GenerationType.UUID)
     String replyId;
 
+    @Lob
+    @Column(columnDefinition = "LONGTEXT")
     String replyContent;
+
     LocalDateTime replyTime;
 
     @ManyToOne(cascade = CascadeType.ALL)

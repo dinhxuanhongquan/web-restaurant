@@ -94,6 +94,13 @@ public class FeedBackService {
                 )
         );
     }
+    @Transactional(readOnly = true)
+    public List<FeedBackResponse> getAllFeedBacksByDishId(String dishId) {
+        return feedBackRepository.findAllByDish_DishId(dishId)
+                .stream()
+                .map(feedBackMapper::toFeedBackResponse)
+                .toList();
+    }
 
     @Transactional
     public FeedBackResponse updateFeedBack(String feedBackId, FeedBackUpdateRequest request) {

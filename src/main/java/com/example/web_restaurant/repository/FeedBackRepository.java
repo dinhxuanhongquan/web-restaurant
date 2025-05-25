@@ -12,4 +12,6 @@ public interface FeedBackRepository extends JpaRepository<FeedBack, String> {
     Optional<FeedBack> findByFeedBackId(String feedBackId);
 
     List<FeedBack> findAllByUser_UserId(String userId);
+
+    List<FeedBack> findAllByDish_DishId(String dishId);
 }

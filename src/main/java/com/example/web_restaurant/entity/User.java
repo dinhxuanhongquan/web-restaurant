@@ -27,6 +27,9 @@ public class User {
     String firstName;
     String lastName;
     LocalDate dob;
+
+    @Lob
+    @Column(columnDefinition = "LONGTEXT")
     String image;
 
     @Column(name = "email", unique = true, columnDefinition = "VARCHAR(255) COLLATE utf8mb4_unicode_ci")

@@ -18,7 +18,10 @@ public class FeedBack {
     @Id @GeneratedValue(strategy = GenerationType.UUID)
     String feedBackId;
 
+    @Lob
+    @Column(columnDefinition = "LONGTEXT")
     String feedBackContent;
+
     LocalDateTime feedBackTime;
     Integer rating;
 

@@ -53,6 +53,8 @@ public enum ErrorCode {
     INVALID_BOOKING_TIME(1033, "Booking time must be in the future", HttpStatus.BAD_REQUEST),
     INVALID_BOOKING_TIME_RANGE(1034, "Booking time must be between 08:00 and 22:00.", HttpStatus.BAD_REQUEST),
     INVALID_BOOKING_TIME_MIN_MONTH(1035, "Booking cannot be more than 1 month or less than 1 hour in advance.", HttpStatus.BAD_REQUEST),
+
+    ROLE_NOT_EXISTED(1036, "Role not existed", HttpStatus.NOT_FOUND),
     ;
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {

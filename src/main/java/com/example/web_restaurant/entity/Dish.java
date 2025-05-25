@@ -1,6 +1,7 @@
 package com.example.web_restaurant.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -17,16 +18,18 @@ public class Dish {
     String dishId;
 
     String dishName;
+
+    @Lob
+    @Column(columnDefinition = "LONGTEXT")
     String dishDescription;
+
+    @Lob
+    @Column(columnDefinition = "LONGTEXT")
     String dishImage;
+
     String dishPrice;
     String nameChef;
 
-//    @OneToMany(mappedBy = "dish", cascade = CascadeType.ALL, orphanRemoval = true)
-//    Set<BillDish> billDishes;
-//
-//    @OneToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH}, orphanRemoval = true)
-//    Set<FeedBack> feedBacks;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "categoryId")

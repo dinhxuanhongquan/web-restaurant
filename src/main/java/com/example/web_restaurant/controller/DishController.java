@@ -43,6 +43,13 @@ public class DishController {
                 .build();
     }
 
+    @GetMapping("/category/{categoryId}")
+    public ApiResponse<List<DishResponse>> getDishesByCategoryId(@PathVariable("categoryId") String categoryDishId) {
+        return ApiResponse.<List<DishResponse>>builder()
+                .result(dishService.getAllDishesByCategoryDishId(categoryDishId))
+                .build();
+    }
+
     @PutMapping("/{dishId}")
     public ApiResponse<DishResponse> updateDish(
             @RequestBody @Valid DishUpdateRequest request,

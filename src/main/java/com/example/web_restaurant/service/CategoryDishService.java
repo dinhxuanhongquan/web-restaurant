@@ -63,7 +63,6 @@ public class CategoryDishService {
     }
 
     @Transactional(readOnly = true)
-    @PreAuthorize("hasRole('ADMIN')")
     public List<CategoryDishResponse> getAllCategoryDishes() {
         return categoryDishRepository.findAll()
                 .stream()

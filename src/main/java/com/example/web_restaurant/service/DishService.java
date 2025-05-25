@@ -54,7 +54,6 @@ public class DishService {
     }
 
     @Transactional(readOnly = true)
-    @PreAuthorize("hasRole('ADMIN')")
     public DishResponse getDishById(String dishId){
         return dishMapper.toResponse(
                 dishRepository.findById(dishId)
@@ -62,8 +61,15 @@ public class DishService {
         );
     }
 
+    // New
     @Transactional(readOnly = true)
-    @PreAuthorize("hasRole('ADMIN')")
+    public List<DishResponse>getAllDishesByCategoryDishId(String categoryId){
+        return dishRepository.findAllByCategoryDish_CategoryId(categoryId).stream()
+                .map(dishMapper::toResponse)
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
     public List<DishResponse> getAllDishes(){
         return dishRepository.findAll().stream()
                 .map(dishMapper::toResponse)

@@ -43,6 +43,12 @@ public class FeedBackController {
                 .result(feedBackService.getAllFeedBacksByUserId())
                 .build();
     }
+    @GetMapping("/dish/{dishId}")
+    public ApiResponse<List<FeedBackResponse>> getAllFeedBacksByDishId(@PathVariable("dishId") String dishId) {
+        return ApiResponse.<List<FeedBackResponse>>builder()
+                .result(feedBackService.getAllFeedBacksByDishId(dishId))
+                .build();
+    }
 
     @GetMapping("/{feedBackId}")
     public ApiResponse<FeedBackResponse> getFeedBackById(@PathVariable("feedBackId") String feedBackId) {

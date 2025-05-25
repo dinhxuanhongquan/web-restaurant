@@ -6,6 +6,7 @@ import com.example.web_restaurant.dto.request.BookingUpdateRequest;
 import com.example.web_restaurant.dto.response.BookingResponse;
 import com.example.web_restaurant.entity.Booking;
 import com.example.web_restaurant.entity.Table;
+import com.example.web_restaurant.entity.User;
 import com.example.web_restaurant.exception.AppException;
 import com.example.web_restaurant.exception.ErrorCode;
 import com.example.web_restaurant.mapper.BookingMapper;
@@ -39,6 +40,7 @@ public class BookingService {
     BookingMapper bookingMapper;
     TableRepository tableRepository;
     UserRepository userRepository;
+    EmailService emailService;
 
     @Transactional
     public BookingResponse createBooking(BookingCreationRequest request) {
@@ -77,6 +79,21 @@ public class BookingService {
         try {
             booking = bookingRepository.save(booking);
             table.setTableStatus(PredefineTableStatus.BOOKED);
+            // Save the table status
+            tableRepository.save(table);
+            // Send email to user
+            User user = booking.getUser();
+            if (user.getEmail() != null && !user.getEmail().isEmpty()) {
+                String subject = "Xác nhận đặt bàn thành công - Nhà Hàng Truyền Thống";
+                String content = "Chào " + user.getFirstName() + " " + user.getLastName() + ",\n\n" +
+                        "Cảm ơn bạn đã đặt bàn tại Web Restaurant thành công lúc " + booking.getBookingTime() + ", \n\n" +
+                        "Thông tin đặt bàn của bạn:\n" +
+                        "Mã đặt bàn: " + booking.getBookingId()+ "\n" +
+                        "Mã bàn:     " + booking.getTable().getTableId() + "\n" +
+                        "Rất mong được tiếp đón bạn tại nhà hàng của chúng tôi. Xin Cảm Ơn !\n\n";
+                // Assuming EmailService is a service that handles sending emails
+                emailService.sendBookingConfirmationEmail(user.getEmail(), subject, content);
+            }
         } catch (Exception exception) {
             throw new AppException(ErrorCode.BOOKING_NOT_CREATED);
         }
@@ -162,6 +179,7 @@ public class BookingService {
         return bookingMapper.toBookingResponse(booking);
     }
 
+    @Transactional
     public void deleteBookingById(String bookingId) {
         // set user as null
         Booking booking = bookingRepository.findById(bookingId)

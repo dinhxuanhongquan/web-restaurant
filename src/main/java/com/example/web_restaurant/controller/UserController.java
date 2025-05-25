@@ -2,6 +2,7 @@ package com.example.web_restaurant.controller;
 
 import com.example.web_restaurant.dto.request.ApiResponse;
 import com.example.web_restaurant.dto.request.UserCreationRequest;
+import com.example.web_restaurant.dto.request.UserUpdateMeRequest;
 import com.example.web_restaurant.dto.request.UserUpdateRequest;
 import com.example.web_restaurant.dto.response.UserResponse;
 import com.example.web_restaurant.service.UserService;
@@ -47,6 +48,13 @@ public class UserController {
     ApiResponse<UserResponse> getMyInfo() {
         return ApiResponse.<UserResponse>builder()
                 .result(userService.getInfo())
+                .build();
+    }
+
+    @PutMapping("/me")
+    ApiResponse<UserResponse> updateMe(@RequestBody @Valid UserUpdateMeRequest request) {
+        return ApiResponse.<UserResponse>builder()
+                .result(userService.updateMe(request))
                 .build();
     }
 
