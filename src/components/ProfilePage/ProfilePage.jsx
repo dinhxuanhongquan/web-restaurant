@@ -99,19 +99,11 @@ const ProfilePage = ({ onClose, user: initialUser }) => {
             avatar: user.image || ''
         });
         
-        // Set avatar preview if user has an image
-        if (user.image) {
-            console.log("Setting avatar from user image:", user.image);
-            // Nếu user.image là URL đầy đủ
-            if (user.image.startsWith('http')) {
-                setAvatarPreview(user.image);
-            } 
-            // Nếu user.image chỉ là tên file (như trong ví dụ "image03")
-            else {
-                // Sử dụng placeholder nếu không có URL thực
-                setAvatarPreview('https://icons.iconarchive.com/icons/papirus-team/papirus-status/512/avatar-default-icon.png');
-            }
+         // If the image is already a base64 string, set it as the preview
+        if (user.image && typeof user.image === 'object' && user.image.data) {
+            setAvatarPreview(user.image.data);
         }
+        
     }, [user]);
     
     // Tải dữ liệu người dùng khi component được khởi tạo
@@ -215,14 +207,67 @@ const ProfilePage = ({ onClose, user: initialUser }) => {
     const handleAvatarChange = (e) => {
         const file = e.target.files[0];
         if (file) {
-            setProfileData({
-                ...profileData,
-                avatar: file
-            });
+            // Kiểm tra xem có phải file ảnh không
+            if (!file.type.match('image.*')) {
+                setError('Vui lòng chọn file ảnh');
+                return;
+            }
             
+            // Đọc file và chuyển đổi thành Base64 với nén ảnh
             const reader = new FileReader();
-            reader.onload = () => {
-                setAvatarPreview(reader.result);
+            reader.onload = (event) => {
+                const img = new Image();
+                img.onload = () => {
+                    // Tạo canvas để nén ảnh
+                    const canvas = document.createElement('canvas');
+                    
+                    // Tính toán kích thước mới của ảnh (giảm kích thước nếu quá lớn)
+                    let width = img.width;
+                    let height = img.height;
+                    const MAX_WIDTH = 800;
+                    const MAX_HEIGHT = 800;
+                    
+                    if (width > height) {
+                        if (width > MAX_WIDTH) {
+                            height *= MAX_WIDTH / width;
+                            width = MAX_WIDTH;
+                        }
+                    } else {
+                        if (height > MAX_HEIGHT) {
+                            width *= MAX_HEIGHT / height;
+                            height = MAX_HEIGHT;
+                        }
+                    }
+                    
+                    // Thiết lập kích thước canvas
+                    canvas.width = width;
+                    canvas.height = height;
+                    
+                    // Vẽ ảnh đã resize lên canvas
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+                    
+                    // Chuyển đổi canvas thành Base64 (JPEG với chất lượng 0.8)
+                    const base64Image = canvas.toDataURL('image/jpeg', 0.8);
+                    
+                    // Tạo đối tượng JSON chứa thông tin ảnh
+                    const imageData = {
+                        data: base64Image,
+                        filename: file.name,
+                        contentType: 'image/jpeg',
+                        size: Math.round(base64Image.length * 0.75) // ước tính kích thước
+                    };
+                    
+                    // Lưu dữ liệu ảnh dưới dạng JSON
+                    setProfileData({
+                        ...profileData,
+                        avatar: imageData
+                    });
+                    
+                    // Hiển thị ảnh đã nén
+                    setAvatarPreview(base64Image);
+                };
+                img.src = event.target.result;
             };
             reader.readAsDataURL(file);
         }
@@ -254,27 +299,31 @@ const ProfilePage = ({ onClose, user: initialUser }) => {
                 return;
             }
             
-            const formData = new FormData();
-            formData.append('firstName', profileData.firstName);
-            formData.append('lastName', profileData.lastName);
-            formData.append('email', profileData.email);
-            formData.append('phoneNumber', profileData.phoneNumber);
-            formData.append('dob', profileData.dateOfBirth);
+            // Tạo payload JSON thay vì FormData
+            const payload = {
+                firstName: profileData.firstName,
+                lastName: profileData.lastName,
+                password: profileData.password,
+                email: profileData.email,
+                phoneNumber: profileData.phoneNumber,
+                dob: profileData.dateOfBirth
+            };
             
-            
-            if (profileData.avatar && typeof profileData.avatar !== 'string') {
-                formData.append('image', profileData.avatar);
+            // Xử lý ảnh đại diện - chỉ gửi dữ liệu base64 dạng chuỗi
+            if (profileData.avatar && typeof profileData.avatar === 'object' && profileData.avatar.data) {
+                // Chỉ gửi chuỗi base64 thay vì gửi cả đối tượng
+                payload.image = profileData.avatar.data;
             }
             
-            console.log("Updating profile with data:", Object.fromEntries(formData));
+            console.log("Updating profile with data:", payload);
             
             const response = await axios.put(
                 `http://localhost:8000/restaurant/users/me`,
-                formData,
+                payload,
                 {
                     headers: {
                         'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'multipart/form-data'
+                        'Content-Type': 'application/json'
                     }
                 }
             );
@@ -389,7 +438,7 @@ const ProfilePage = ({ onClose, user: initialUser }) => {
                             <div className="profile-avatar-container">
                                 <img 
                                     // Su dung avatarPreview de hien thi hinh anh khong co thi dung cung thu folder public
-                                    src={avatarPreview || 'https://icons.iconarchive.com/icons/papirus-team/papirus-status/512/avatar-default-icon.png'}
+                                    src={avatarPreview || (user.image?.data || user.image || 'https://icons.iconarchive.com/icons/papirus-team/papirus-status/512/avatar-default-icon.png')}
                                     alt="Avatar" 
                                     className="profile-avatar"
                                     style={

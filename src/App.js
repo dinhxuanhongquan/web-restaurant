@@ -10,6 +10,7 @@ import Login from './components/Login/Login';
 import AdminPanel from './components/Admin/AdminPanel';
 import GoogleMap from './components/GoogleMap/GoogleMap';
 import ProfilePage from './components/ProfilePage/ProfilePage';
+import  MenuPage from './components/MenuPage/MenuPage';
 import { getCurrentUser, logoutUser } from './services/authService';
 
 
@@ -18,6 +19,7 @@ function App() {
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isAdminPanelOpen, setIsAdminPanelOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isMenuPageOpen, setIsMenuPageOpen] = useState(false);
 
   useEffect(() => {
     // Check if user is already authenticated
@@ -57,6 +59,12 @@ function App() {
   const handleCloseProfile = () => {
     setIsProfileOpen(false);
   };
+  const handleOpenMenuPage = () => {
+    setIsMenuPageOpen(true);
+  }
+  const handleCloseMenuPage = () => {
+    setIsMenuPageOpen(false);
+  };
 
   return (
     <div className="App">
@@ -66,6 +74,7 @@ function App() {
         onLogout={handleLogout}
         setIsAdminPanelOpen={handleOpenAdminPanel}
         setIsProfileOpen={handleOpenProfile} 
+        setIsMenuPageOpen={handleOpenMenuPage}
       />
       <Hero />
       <Menu 
@@ -73,7 +82,9 @@ function App() {
         setIsLoginOpen={setIsLoginOpen}
       />
       <About />
-      <Contact />
+      <Contact setIsLoginOpen={setIsLoginOpen} 
+        user={user}
+      />
       <Footer />
       <GoogleMap />
       {isLoginOpen && (
@@ -89,6 +100,13 @@ function App() {
       
       {isProfileOpen && user && (
         <ProfilePage onClose={handleCloseProfile} user={user} />
+      )}
+      
+      {isMenuPageOpen && (
+        <div className="menu-page-overlay">
+          <button onClick={handleCloseMenuPage} className="close-menu-button">X</button>
+          <MenuPage onClose={handleCloseMenuPage} />
+        </div>
       )}
     </div>
   );

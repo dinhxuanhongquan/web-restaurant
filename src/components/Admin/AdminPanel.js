@@ -2,6 +2,7 @@ import React, { useState, useEffect, act } from 'react';
 import './Admin.css';
 import axios from 'axios';
 
+
 const AdminPanel = ({ onClose }) => {
   const [activeTab, setActiveTab] = useState('menu');
   const [isLoading, setIsLoading] = useState(false);
@@ -88,11 +89,11 @@ const AdminPanel = ({ onClose }) => {
     setIsLoading(true);
     setError(null);
     try {
-      const token = localStorage.getItem('token');
+      // const token = localStorage.getItem('token');
       const response = await axios.get('http://localhost:8000/restaurant/dishes', {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
+        // headers: {
+        //   Authorization: `Bearer ${token}`
+        // }
       });
       
       if (response.data && response.data.result) {
@@ -109,11 +110,11 @@ const AdminPanel = ({ onClose }) => {
   // Fetch categories from API
   const fetchCategories = async () => {
     try {
-      const token = localStorage.getItem('token');
+      // const token = localStorage.getItem('token');
       const response = await axios.get('http://localhost:8000/restaurant/category-dishes', {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
+        // headers: {
+        //   Authorization: `Bearer ${token}`
+        // }
       });
       
       if (response.data && response.data.result) {
@@ -636,7 +637,13 @@ const AdminPanel = ({ onClose }) => {
         // Refresh table list
         fetchTables();
         // Reset form
-        setNewTable({ name: '', seats: 2, status: 'available', position: '' });
+        setNewTable({ 
+          tableName: '',
+          tableSeat: '',
+          tableKind: '',
+          tableStatus: 'AVAILABLE',
+          tableLocation: '' 
+        });
       }
     } catch (error) {
       console.error('Error adding table:', error);
@@ -1957,11 +1964,13 @@ const AdminPanel = ({ onClose }) => {
                     required 
                   >
                     <option value="" disabled>---Select Table---</option>
-                    {tables.map(table => (
-                      <option key={table.tableId} value={table.tableId}>
-                        {table.tableName}
-                      </option>
-                    ))}
+                    {tables
+                      .filter(table => table.tableStatus !== "BOOKED")
+                      .map(table => (
+                        <option key={table.tableId} value={table.tableId}>
+                          {table.tableName} - {table.tableStatus}
+                        </option>
+                      ))}
                   </select>
                 </div>
                 <div className="form-group">

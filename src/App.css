@@ -41,6 +41,23 @@ section {
   color: #61dafb;
 }
 
+.close-menu-button {
+  position: absolute;
+  height: 60px;
+  width: 60px;
+  top: 20px;
+  right: 20px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #333;
+  z-index: 5;
+}
+.close-menu-button:hover {
+  background-color: #ff6347; /* Tomato color on hover */
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

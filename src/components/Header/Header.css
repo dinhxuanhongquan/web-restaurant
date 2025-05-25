@@ -45,6 +45,10 @@
     color: #d4833b;
 }
 
+.nav-list li:hover {
+    color: #d4833b;
+}
+
 .mobile-menu {
     display: none;
 }
@@ -188,4 +192,44 @@
     .hambuger.active::after {
         transform: rotate(-45deg);
     }
+}
+.user-avatar-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #eaeaea;
+  margin-bottom: 10px;
+}
+
+.user-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 5px;
+  border: 2px solid #fff;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.default-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: #e74c3c;
+  color: white;
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 5px;
+  border: 2px solid #fff;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.user-full-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+  margin-top: 5px;
 }

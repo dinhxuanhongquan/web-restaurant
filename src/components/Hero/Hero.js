@@ -5,10 +5,6 @@ import TableReservation from '../TableReservation/TableReservation';
 const Hero = () => {
   const [isTableReservationOpen, setIsTableReservationOpen] = useState(false);
 
-  const handleViewMenu = () => {
-    document.querySelector('#menu').scrollIntoView({ behavior: 'smooth' });
-  };
-
   const handleBookTable = () => {
     document.querySelector('#contact').scrollIntoView({ behavior: 'smooth' });
   };
@@ -20,12 +16,11 @@ const Hero = () => {
   return (
     <section id="home" className="hero">
       <div className="hero-content">
-        <h1>Welcome to La Delizioso</h1>
-        <p>Authentic Italian Cuisine in the Heart of the City</p>
+        <h1>Chào mừng đến với Nhà Hàng Truyền Thống</h1>
+        <p>Ẩm thực Việt Nam đích thực ngay giữa lòng thành phố</p>
         <div className="hero-buttons">
-          <button className="btn primary-btn" onClick={handleViewMenu}>View Menu</button>
-          <button className="btn secondary-btn" onClick={handleBookTable}>Book a Table</button>
-          <button className="btn secondary-btn" onClick={handleDetailsTable}>Details Table</button>
+          <button className="btn secondary-btn" onClick={handleBookTable}>Đặt Bàn</button>
+          <button className="btn secondary-btn" onClick={handleDetailsTable}>Chi Tiết Bàn</button>
         </div>
       </div>
       

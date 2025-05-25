@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import './FoodDetail.css';
 
 const FoodDetail = ({ setIsLoginOpen, foodId, onClose, isAdmin = false, user = null }) => {
@@ -9,165 +10,228 @@ const FoodDetail = ({ setIsLoginOpen, foodId, onClose, isAdmin = false, user = n
     const [reviewText, setReviewText] = useState('');
     const [reviews, setReviews] = useState([]);
     const [replyText, setReplyText] = useState({});
-    
+    const [error, setError] = useState(null);
 
-    // Fetch food data and reviews
+    // Fetch food data
     useEffect(() => {
-        // In a real application, you would fetch data from an API
-        // For now, we'll simulate with setTimeout and mock data
-        setTimeout(() => {
-            const mockFood = {
-                id: foodId,
-                name: 'Spaghetti Carbonara',
-                description: 'Món mì Ý truyền thống với thịt xông khói, trứng, phô mai Pecorino Romano và nhiều hạt tiêu đen.',
-                price: '149.000 VNĐ',
-                image: 'https://images.unsplash.com/photo-1612874742237-6526221588e3?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80',
-                ingredients: ['Mì Spaghetti', 'Thịt xông khói', 'Trứng', 'Phô mai Pecorino Romano', 'Tiêu đen', 'Tỏi'],
-                nutritionalInfo: {
-                    calories: 670,
-                    protein: '27g',
-                    carbs: '83g',
-                    fat: '22g'
-                },
-                averageRating: 4.7,
-                totalReviews: 128
-            };
-
-            const mockReviews = [
-                {
-                    id: 1,
-                    userId: 'user123',
-                    username: 'NguyenVanA',
-                    rating: 5,
-                    text: 'Món ăn tuyệt vời! Vị béo ngậy của sốt carbonara kết hợp hoàn hảo với thịt xông khói giòn.',
-                    date: '2023-05-15T14:32:00',
-                    likes: 12,
-                    reply: {
-                        text: 'Cảm ơn bạn đã đánh giá! Chúng tôi rất vui khi bạn thích món ăn của chúng tôi.',
-                        date: '2023-05-16T10:15:00',
-                        by: 'Admin'
-                    }
-                },
-                {
-                    id: 2,
-                    userId: 'user456',
-                    username: 'TranThiB',
-                    rating: 4,
-                    text: 'Phần ăn lớn và rất ngon. Phô mai thơm phức. Chỉ tiếc là hơi mặn một chút.',
-                    date: '2023-05-10T19:45:00',
-                    likes: 5,
-                    reply: null
-                },
-                {
-                    id: 3,
-                    userId: 'user789',
-                    username: 'LeDinhC',
-                    rating: 5,
-                    text: 'Mình ăn nhiều nhà hàng Ý rồi nhưng món carbonara ở đây là ngon nhất. Sẽ quay lại!',
-                    date: '2023-04-28T12:15:00',
-                    likes: 8,
-                    reply: {
-                        text: 'Cảm ơn bạn đã ủng hộ! Chúng tôi luôn cố gắng mang đến hương vị Ý đích thực.',
-                        date: '2023-04-29T09:30:00',
-                        by: 'Admin'
-                    }
+        const fetchFoodDetails = async () => {
+            try {
+                const dishId = foodId || localStorage.getItem('foodId');
+                if (!dishId) {
+                    setError('No dish ID found');
+                    return;
                 }
-            ];
+                const response = await axios.get(`http://localhost:8000/restaurant/dishes/${foodId}`);
+                if (response.data?.result) {
+                    setFood(response.data.result);
+                } else {
+                    setError('Could not load dish details');
+                }
+            } catch (error) {
+                console.error('Error fetching dish details:', error);
+                setError('Failed to load dish details');
+            } finally {
+                // Continue with feedback loading even if dish fails
+                fetchFeedback();
+            }
+        };
 
-            setFood(mockFood);
-            setReviews(mockReviews);
-            setLoading(false);
-        }, 1000);
+        const fetchFeedback = async () => {
+            try {
+                const response = await axios.get(`http://localhost:8000/restaurant/feedbacks/dish/${foodId}`);
+                if (response.data?.result) {
+                    // For each feedback, fetch the replies
+                    const feedbacksWithReplies = await Promise.all(
+                        response.data.result.map(async (feedback) => {
+                            try {
+                                const replyResponse = await axios.get(
+                                    `http://localhost:8000/restaurant/replies/feedback/${feedback.feedBackId}`
+                                );
+                                
+                                // If there are replies, attach them to the feedback
+                                if (replyResponse.data?.result && replyResponse.data.result.length > 0) {
+                                    return {
+                                        ...feedback,
+                                        replies: replyResponse.data.result
+                                    };
+                                }
+                                return feedback;
+                            } catch (error) {
+                                console.error(`Error fetching replies for feedback ${feedback.feedBackId}:`, error);
+                                return feedback; // Return feedback without replies if error
+                            }
+                        })
+                    );
+                    setReviews(feedbacksWithReplies);
+                }
+            } catch (error) {
+                console.error('Error fetching feedback:', error);
+                setError((prevError) => prevError || 'Failed to load reviews');
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        // Start the data loading process
+        fetchFoodDetails();
     }, [foodId]);
+
+    const calculateAverageRating = (reviewsList) => {
+        if (!reviewsList || reviewsList.length === 0) return 0;
+        const sum = reviewsList.reduce((total, review) => total + review.rating, 0);
+        return sum / reviewsList.length;
+    };
 
     const handleRatingClick = (rate) => {
         setRating(rate);
     };
 
     const handleLogin = () => {
-        // Chuyen trang dang nhap
         setIsLoginOpen(true);
-
     };
 
-    const handleSubmitReview = (e) => {
+    const handleSubmitReview = async (e) => {
         e.preventDefault();
         
         if (!user) {
-            alert('Vui lòng đăng nhập để đánh giá món ăn');
+            alert('Please log in to review this dish');
             return;
         }
         
         if (rating === 0) {
-            alert('Vui lòng chọn số sao đánh giá');
+            alert('Please select a rating');
             return;
         }
         
-        // Create new review
-        const newReview = {
-            id: Date.now(),
-            userId: user.id || 'tempUser',
-            username: user.username || 'Khách',
-            rating,
-            text: reviewText,
-            date: new Date().toISOString(),
-            likes: 0,
-            reply: null
-        };
-        
-        setReviews([newReview, ...reviews]);
-        setRating(0);
-        setReviewText('');
-        
-        // Update average rating
-        const totalRating = reviews.reduce((sum, review) => sum + review.rating, 0) + rating;
-        const avgRating = totalRating / (reviews.length + 1);
-        setFood({
-            ...food,
-            averageRating: parseFloat(avgRating.toFixed(1)),
-            totalReviews: reviews.length + 1
-        });
+        try {
+            const token = localStorage.getItem('token');
+            const reviewData = {
+                feedBackContent: reviewText,
+                rating: rating,
+                dishId: foodId
+            };
+            
+            const response = await axios.post(
+                `http://localhost:8000/restaurant/feedbacks`,
+                reviewData,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                }
+            );
+            
+            if (response.data?.result) {
+                // Add the new review to the list
+                const newReview = response.data.result;
+                setReviews([newReview, ...reviews]);
+                setRating(0);
+                setReviewText('');
+                
+                // Update the UI to reflect the new review
+                const avgRating = calculateAverageRating([...reviews, newReview]);
+                setFood({
+                    ...food,
+                    averageRating: avgRating,
+                    totalReviews: reviews.length + 1
+                });
+            }
+        } catch (error) {
+            console.error('Error submitting review:', error);
+            alert('Failed to submit review. Please try again.');
+        }
     };
 
-    const handleReply = (reviewId) => {
-        if (!replyText[reviewId]?.trim()) {
-            alert('Vui lòng nhập nội dung phản hồi');
+    const handleReply = async (feedbackId) => {
+        console.log("FeedbackId received:", feedbackId); // Debug log
+        
+        // Validate feedbackId isn't null
+        if (!feedbackId) {
+            alert('Error: Missing feedback ID');
             return;
         }
         
-        // Add admin reply
-        const updatedReviews = reviews.map(review => {
-            if (review.id === reviewId) {
-                return {
-                    ...review,
-                    reply: {
-                        text: replyText[reviewId],
-                        date: new Date().toISOString(),
-                        by: 'Admin'
-                    }
-                };
-            }
-            return review;
-        });
+        if (!replyText[feedbackId]?.trim()) {
+            alert('Please enter a reply');
+            return;
+        }
         
-        setReviews(updatedReviews);
-        setReplyText({
-            ...replyText,
-            [reviewId]: ''
-        });
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                alert('You need to be logged in to reply');
+                return;
+            }
+            
+            // Make sure the data structure matches what the backend expects
+            const replyData = {
+                replyContent: replyText[feedbackId],
+                feedbackId: feedbackId // Make sure this matches the backend field name
+            };
+            
+            console.log("Sending reply data:", replyData); // Debug log
+            
+            const response = await axios.post(
+                `http://localhost:8000/restaurant/replies`,
+                replyData,
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                }
+            );
+            
+            console.log("Reply response:", response.data); // Debug log
+            
+            if (response.data?.result) {
+                // Update the reviews with the new reply
+                const updatedReviews = reviews.map(review => {
+                    if (review.feedBackId === feedbackId) {
+                        return {
+                            ...review,
+                            replies: [...(review.replies || []), response.data.result]
+                        };
+                    }
+                    return review;
+                });
+                
+                setReviews(updatedReviews);
+                setReplyText({
+                    ...replyText,
+                    [feedbackId]: ''
+                });
+                
+                // Success message
+                alert('Reply submitted successfully!');
+            }
+        } catch (error) {
+            console.error('Error submitting reply:', error);
+            
+            // More detailed error logging
+            if (error.response) {
+                console.error('Response data:', error.response.data);
+                console.error('Response status:', error.response.status);
+                alert(`Error: ${error.response.data.message || 'Failed to submit reply'}`);
+            } else {
+                alert('Failed to submit reply. Please try again.');
+            }
+        }
     };
 
     const handleLikeReview = (reviewId) => {
         if (!user) {
-            alert('Vui lòng đăng nhập để thích đánh giá');
+            alert('Please log in to like reviews');
             return;
         }
         
+        // This would be implemented with an API call in a real app
         const updatedReviews = reviews.map(review => {
-            if (review.id === reviewId) {
+            if (review.feedBackId === reviewId) {
                 return {
                     ...review,
-                    likes: review.likes + 1
+                    likes: (review.likes || 0) + 1
                 };
             }
             return review;
@@ -177,6 +241,7 @@ const FoodDetail = ({ setIsLoginOpen, foodId, onClose, isAdmin = false, user = n
     };
 
     const formatDate = (dateString) => {
+        if (!dateString) return '';
         const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
         return new Date(dateString).toLocaleDateString('vi-VN', options);
     };
@@ -185,24 +250,42 @@ const FoodDetail = ({ setIsLoginOpen, foodId, onClose, isAdmin = false, user = n
         return (
             <div className="food-detail-overlay">
                 <div className="food-detail-container">
-                    <div className="food-detail-loading">Đang tải...</div>
+                    <div className="food-detail-loading">Loading...</div>
                 </div>
             </div>
         );
     }
 
+    if (error || !food) {
+        return (
+            <div className="food-detail-overlay">
+                <div className="food-detail-container">
+                    <div className="food-detail-error">
+                        <h3>Error loading dish details</h3>
+                        <p>{error}</p>
+                        <button onClick={onClose}>Close</button>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    // Calculate average rating and total reviews
+    const averageRating = calculateAverageRating(reviews) || food.averageRating || 0;
+    const totalReviews = reviews.length;
+
     return (
         <div className="food-detail-overlay" onClick={onClose}>
             <div className="food-detail-container" onClick={(e) => e.stopPropagation()}>
                 <div className="food-detail-header">
-                    <h2>{food.name}</h2>
+                    <h2>{food.dishName}</h2>
                     <button className="close-btn" onClick={onClose}>×</button>
                 </div>
                 
                 <div className="food-detail-content">
                     <div className="food-main-info">
                         <div className="food-image">
-                            <img src={food.image} alt={food.name} />
+                            <img src={food.dishImage || 'https://via.placeholder.com/150'} alt={food.dishName} />
                         </div>
                         <div className="food-info">
                             <div className="food-rating">
@@ -210,56 +293,60 @@ const FoodDetail = ({ setIsLoginOpen, foodId, onClose, isAdmin = false, user = n
                                     {[1, 2, 3, 4, 5].map((star) => (
                                         <span 
                                             key={star} 
-                                            className={star <= food.averageRating ? 'star filled' : 'star'}
+                                            className={star <= averageRating ? 'star filled' : 'star'}
                                         >★</span>
                                     ))}
                                 </div>
-                                <span className="rating-value">{food.averageRating.toFixed(1)}</span>
-                                <span className="review-count">({food.totalReviews} đánh giá)</span>
+                                <span className="rating-value">{averageRating.toFixed(1)}</span>
+                                <span className="review-count">({totalReviews} reviews)</span>
                             </div>
                             
-                            <div className="food-price">{food.price}</div>
-                            <div className="food-description">{food.description}</div>
+                            <div className="food-price">{food.dishPrice} VNĐ</div>
+                            <div className="food-description">{food.dishDescription}</div>
                             
-                            <div className="food-ingredients">
-                                <h3>Nguyên liệu:</h3>
-                                <ul>
-                                    {food.ingredients.map((ingredient, index) => (
-                                        <li key={index}>{ingredient}</li>
-                                    ))}
-                                </ul>
-                            </div>
+                            {food.ingredients && (
+                                <div className="food-ingredients">
+                                    <h3>Ingredients:</h3>
+                                    <ul>
+                                        {food.ingredients.map((ingredient, index) => (
+                                            <li key={index}>{ingredient}</li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            )}
                             
-                            <div className="food-nutrition">
-                                <h3>Thông tin dinh dưỡng:</h3>
-                                <div className="nutrition-info">
-                                    <div className="nutrition-item">
-                                        <span>Calo:</span>
-                                        <span>{food.nutritionalInfo.calories}</span>
-                                    </div>
-                                    <div className="nutrition-item">
-                                        <span>Protein:</span>
-                                        <span>{food.nutritionalInfo.protein}</span>
-                                    </div>
-                                    <div className="nutrition-item">
-                                        <span>Carbs:</span>
-                                        <span>{food.nutritionalInfo.carbs}</span>
-                                    </div>
-                                    <div className="nutrition-item">
-                                        <span>Chất béo:</span>
-                                        <span>{food.nutritionalInfo.fat}</span>
+                            {food.nutritionalInfo && (
+                                <div className="food-nutrition">
+                                    <h3>Nutritional Information:</h3>
+                                    <div className="nutrition-info">
+                                        <div className="nutrition-item">
+                                            <span>Calories:</span>
+                                            <span>{food.nutritionalInfo.calories}</span>
+                                        </div>
+                                        <div className="nutrition-item">
+                                            <span>Protein:</span>
+                                            <span>{food.nutritionalInfo.protein}</span>
+                                        </div>
+                                        <div className="nutrition-item">
+                                            <span>Carbs:</span>
+                                            <span>{food.nutritionalInfo.carbs}</span>
+                                        </div>
+                                        <div className="nutrition-item">
+                                            <span>Fat:</span>
+                                            <span>{food.nutritionalInfo.fat}</span>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                            )}
                         </div>
                     </div>
                     
                     <div className="food-reviews-section">
-                        <h3>Đánh giá và phản hồi</h3>
+                        <h3>Reviews and Feedback</h3>
                         
                         {user ? (
                             <div className="add-review">
-                                <h4>Thêm đánh giá của bạn</h4>
+                                <h4>Add Your Review</h4>
                                 <form onSubmit={handleSubmitReview}>
                                     <div className="rating-input">
                                         <div className="stars-input">
@@ -273,12 +360,12 @@ const FoodDetail = ({ setIsLoginOpen, foodId, onClose, isAdmin = false, user = n
                                                 >★</span>
                                             ))}
                                         </div>
-                                        <span>{rating ? `${rating}/5` : 'Chọn đánh giá'}</span>
+                                        <span>{rating ? `${rating}/5` : 'Choose a rating'}</span>
                                     </div>
                                     
                                     <div className="review-input">
                                         <textarea 
-                                            placeholder="Chia sẻ trải nghiệm của bạn về món ăn này..."
+                                            placeholder="Share your experience with this dish..."
                                             value={reviewText}
                                             onChange={(e) => setReviewText(e.target.value)}
                                             required
@@ -286,27 +373,28 @@ const FoodDetail = ({ setIsLoginOpen, foodId, onClose, isAdmin = false, user = n
                                     </div>
                                     
                                     <button type="submit" className="submit-review-btn">
-                                        Gửi đánh giá
+                                        Submit Review
                                     </button>
                                 </form>
                             </div>
                         ) : (
                             <div className="login-prompt">
-                                <div className="login-btn" onClick={handleLogin}>
-                                     Đăng nhập
-                                </div>
+                                <p>Please log in to leave a review</p>
+                                <button className="login-btn" onClick={handleLogin}>
+                                    Log In
+                                </button>
                             </div>
                         )}
                         
                         <div className="reviews-list">
-                            <h4>Tất cả đánh giá ({reviews.length})</h4>
+                            <h4>All Reviews ({reviews.length})</h4>
                             
                             {reviews.length > 0 ? (
                                 reviews.map(review => (
-                                    <div className="review-item" key={review.id}>
+                                    <div className="review-item" key={review.feedBackId}>
                                         <div className="review-header">
-                                            <div className="review-user">{review.username}</div>
-                                            <div className="review-date">{formatDate(review.date)}</div>
+                                            <div className="review-user">{review.user?.firstName + " " + review.user?.lastName || "Anonymous"}</div>
+                                            <div className="review-date">{formatDate(review.feedBackTime)}</div>
                                         </div>
                                         
                                         <div className="review-rating">
@@ -317,51 +405,53 @@ const FoodDetail = ({ setIsLoginOpen, foodId, onClose, isAdmin = false, user = n
                                                 >★</span>
                                             ))}
                                         </div>
-                                        
-                                        <div className="review-text">{review.text}</div>
+                                        <div className="review-text">{review.feedBackContent}</div>
                                         
                                         <div className="review-actions">
                                             <button 
                                                 className="like-btn"
-                                                onClick={() => handleLikeReview(review.id)}
+                                                onClick={() => handleLikeReview(review.feedBackId)}
                                             >
-                                                <i className="fa fa-thumbs-up"></i> {review.likes}
+                                                <i className="fa fa-thumbs-up"></i> {review.likes || 0}
                                             </button>
                                         </div>
                                         
-                                        {review.reply && (
-                                            <div className="review-reply">
+                                        {review.replies && review.replies.map(reply => (
+                                            <div className="review-reply" key={reply.replyId}>
                                                 <div className="reply-header">
-                                                    <strong>{review.reply.by}</strong>
-                                                    <span className="reply-date">{formatDate(review.reply.date)}</span>
+                                                    <strong>{reply.user?.username || "Admin"}</strong>
+                                                    <span className="reply-date">{formatDate(reply.replyTime)}</span>
                                                 </div>
-                                                <div className="reply-text">{review.reply.text}</div>
+                                                <div className="reply-text">{reply.replyContent}</div>
                                             </div>
-                                        )}
+                                        ))}
                                         
-                                        {isAdmin && !review.reply && (
+                                        {isAdmin && (!review.replies || review.replies.length === 0) && (
                                             <div className="admin-reply-form">
                                                 <textarea 
-                                                    placeholder="Viết phản hồi của admin..."
-                                                    value={replyText[review.id] || ''}
+                                                    placeholder="Write an admin response..."
+                                                    value={replyText[review.feedBackId] || ''}
                                                     onChange={(e) => setReplyText({
                                                         ...replyText,
-                                                        [review.id]: e.target.value
+                                                        [review.feedBackId]: e.target.value
                                                     })}
                                                 ></textarea>
                                                 <button 
-                                                    onClick={() => handleReply(review.id)} 
+                                                    onClick={() => {
+                                                        console.log("Reply button clicked, feedBackId:", review.feedBackId);
+                                                        handleReply(review.feedBackId);
+                                                    }} 
                                                     className="reply-btn"
-                                                    disabled={!replyText[review.id]}
+                                                    disabled={!replyText[review.feedBackId] || !review.feedBackId}
                                                 >
-                                                    Gửi phản hồi
+                                                    Send Reply
                                                 </button>
                                             </div>
                                         )}
                                     </div>
                                 ))
                             ) : (
-                                <div className="no-reviews">Chưa có đánh giá nào cho món ăn này</div>
+                                <div className="no-reviews">No reviews for this dish yet</div>
                             )}
                         </div>
                     </div>

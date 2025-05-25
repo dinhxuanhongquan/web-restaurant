@@ -1,44 +1,78 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { QRCodeSVG } from 'qrcode.react';
+import axios from 'axios';
 import './TableReservation.css';
 
-const TableReservation = ({ isOpen, onClose }) => {
+const TableReservation = ({ isOpen, onClose, user }) => {
   const [selectedTable, setSelectedTable] = useState(null);
+  const [tables, setTables] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   
-  // Danh sách các bàn trong nhà hàng
-  const tables = [
-    { id: 1, name: 'Bàn 01', seats: 2, status: 'available', position: 'Cửa sổ' },
-    { id: 2, name: 'Bàn 02', seats: 2, status: 'reserved', position: 'Cửa sổ' },
-    { id: 3, name: 'Bàn 03', seats: 4, status: 'available', position: 'Trong nhà' },
-    { id: 4, name: 'Bàn 04', seats: 4, status: 'available', position: 'Trong nhà' },
-    { id: 5, name: 'Bàn 05', seats: 6, status: 'occupied', position: 'Ngoài trời' },
-    { id: 6, name: 'Bàn 06', seats: 6, status: 'available', position: 'Ngoài trời' },
-    { id: 7, name: 'Bàn 07', seats: 8, status: 'available', position: 'VIP' },
-    { id: 8, name: 'Bàn 08', seats: 2, status: 'available', position: 'Cửa sổ' },
-    { id: 9, name: 'Bàn 09', seats: 4, status: 'reserved', position: 'Trong nhà' },
-    { id: 10, name: 'Bàn 10', seats: 8, status: 'available', position: 'VIP' },
-  ];
-  
-  // Lọc bàn theo số chỗ ngồi
+  // Filters
   const [seatFilter, setSeatFilter] = useState('all');
-  
-  // Lọc bàn theo vị trí
   const [positionFilter, setPositionFilter] = useState('all');
   
-  // Tạo URL đặt bàn dựa trên thông tin bàn
-  const getReservationUrl = (table) => {
-    // Trong thực tế, bạn có thể tạo URL tới hệ thống đặt bàn của bạn
-    return `http://192.168.172.1:3000/reserve?table=${table.id}&seats=${table.seats}`;
+  // Fetch tables from API
+  useEffect(() => {
+    const fetchTables = async () => {
+      try {
+        setLoading(true);
+        const response = await axios.get('http://localhost:8000/restaurant/tables');
+        
+        if (response.data?.result) {
+          // Map API data to our component's format
+          const mappedTables = response.data.result.map(table => ({
+            id: table.tableId,
+            name: table.tableName,
+            seats: table.tableSeat,
+            status: table.tableStatus.toLowerCase(), // Convert to lowercase
+            position: mapLocation(table.tableLocation), // Map location to display name
+            kind: table.tableKind
+          }));
+          
+          setTables(mappedTables);
+        } else {
+          setError("Failed to load tables data");
+        }
+      } catch (error) {
+        console.error("Error fetching tables:", error);
+        setError("Error loading tables. Please try again.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    if (isOpen) {
+      fetchTables();
+    }
+  }, [isOpen]);
+  
+  // Helper function to map API location values to display names
+  const mapLocation = (location) => {
+    const locationMap = {
+      'inside': 'Trong nhà',
+      'outside': 'Ngoài trời'
+    };
+    
+    return locationMap[location] || location;
   };
   
-  // Lọc bàn dựa trên các bộ lọc đã chọn
+  // Get reservation URL
+  const getReservationUrl = (table) => {
+    // In a real application, this would be a URL to your reservation system
+    // return `http://localhost:3000/reserve?tableId=${table.id}&seats=${table.seats}`;
+    return `https://www.facebook.com/hong.quann.660872/`;
+  };
+  
+  // Filter tables based on selected filters
   const filteredTables = tables.filter(table => {
-    // Lọc theo số chỗ ngồi
+    // Filter by seats
     if (seatFilter !== 'all' && table.seats !== parseInt(seatFilter)) {
       return false;
     }
     
-    // Lọc theo vị trí
+    // Filter by position
     if (positionFilter !== 'all' && table.position !== positionFilter) {
       return false;
     }
@@ -46,21 +80,75 @@ const TableReservation = ({ isOpen, onClose }) => {
     return true;
   });
   
+  // Get status text in Vietnamese
   const getStatusText = (status) => {
     switch(status) {
       case 'available': return 'Trống';
-      case 'reserved': return 'Đã đặt';
-      case 'occupied': return 'Đã có khách';
+      case 'booked': return 'Đã đặt';
+      case 'unavailable': return 'Không khả dụng';
       default: return status;
     }
   };
   
-  // Xử lý click vào bàn
+  // Handle table click
   const handleTableClick = (table) => {
     if (selectedTable && selectedTable.id === table.id) {
-      setSelectedTable(null); // Đóng QR nếu click vào bàn đang được chọn
+      setSelectedTable(null);
     } else {
-      setSelectedTable(table); // Hiển thị QR cho bàn được click
+      setSelectedTable(table);
+    }
+  };
+
+  // Handle table reservation
+  const handleReserveTable = async (tableId) => {
+    if (!user) {
+      alert("Vui lòng đăng nhập để đặt bàn");
+      return;
+    }
+
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        alert("Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.");
+        return;
+      }
+
+      // Here you would implement the API call to reserve the table
+      const response = await axios.post(
+        `http://localhost:8000/restaurant/bookings`, 
+        {
+          tableId: tableId,
+          // You might want to add a date/time selector to your UI
+          bookingTime: new Date().toISOString()
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        }
+      );
+
+      if (response.data?.result) {
+        alert("Bàn đã được đặt thành công!");
+        // Refresh the tables list
+        const tablesResponse = await axios.get('http://localhost:8000/restaurant/tables');
+        if (tablesResponse.data?.result) {
+          const mappedTables = tablesResponse.data.result.map(table => ({
+            id: table.tableId,
+            name: table.tableName,
+            seats: table.tableSeat,
+            status: table.tableStatus.toLowerCase(),
+            position: mapLocation(table.tableLocation),
+            kind: table.tableKind
+          }));
+          
+          setTables(mappedTables);
+        }
+      }
+    } catch (error) {
+      console.error("Error reserving table:", error);
+      alert("Không thể đặt bàn. Vui lòng thử lại sau.");
     }
   };
   
@@ -74,15 +162,20 @@ const TableReservation = ({ isOpen, onClose }) => {
           <button className="close-btn" onClick={onClose}>×</button>
         </div>
         
-        <div className="filter-section">
+        <div className="filter-section">  
           <div className="filter-group">
             <label>Số chỗ ngồi:</label>
             <select value={seatFilter} onChange={(e) => setSeatFilter(e.target.value)}>
               <option value="all">Tất cả</option>
               <option value="2">2 người</option>
+              <option value="3">3 người</option>
               <option value="4">4 người</option>
+              <option value="5">5 người</option>
               <option value="6">6 người</option>
+              <option value="7">7 người</option>
               <option value="8">8 người</option>
+              <option value="9">9 người</option>
+              <option value="10">10 người</option>
             </select>
           </div>
           
@@ -90,61 +183,56 @@ const TableReservation = ({ isOpen, onClose }) => {
             <label>Vị trí:</label>
             <select value={positionFilter} onChange={(e) => setPositionFilter(e.target.value)}>
               <option value="all">Tất cả</option>
-              <option value="Cửa sổ">Cửa sổ</option>
               <option value="Trong nhà">Trong nhà</option>
               <option value="Ngoài trời">Ngoài trời</option>
-              <option value="VIP">VIP</option>
             </select>
           </div>
         </div>
         
-        <div className="table-map">
-          {filteredTables.map(table => (
-            <div 
-              key={table.id}
-              className={`table-item ${table.status} ${selectedTable && selectedTable.id === table.id ? 'selected' : ''}`}
-              onClick={() => handleTableClick(table)}
-            >
-              <div className="table-info">
-                <h3>{table.name}</h3>
-                <p>{table.seats} người</p>
-                <p className="table-status">{getStatusText(table.status)}</p>
-                <p className="table-position">{table.position}</p>
-              </div>
-              
-              {/* Hiển thị QR code khi hover hoặc click */}
-              <div className="table-qr">
-                <div className="qr-content">
-                  <QRCodeSVG
-                    value={getReservationUrl(table)}
-                    size={100}
-                    level={"H"}
-                    includeMargin={true}
-                    imageSettings={{
-                      src: "https://upload.wikimedia.org/wikipedia/commons/5/51/Google_Forms_logo.svg",
-                      x: undefined,
-                      y: undefined,
-                      height: 24,
-                      width: 24,
-                      excavate: true,
-                    }}
-                  />
-                  <p>Quét mã để đặt bàn</p>
+        {loading ? (
+          <div className="loading-indicator">Đang tải dữ liệu bàn...</div>
+        ) : error ? (
+          <div className="error-message">{error}</div>
+        ) : (
+          <div className="table-map">
+            {filteredTables.map(table => (
+              <div 
+                key={table.id}
+                className={`table-item ${table.status} ${selectedTable && selectedTable.id === table.id ? 'selected' : ''}`}
+                onClick={() => handleTableClick(table)}
+              >
+                <div className="table-info">
+                  <h3>{table.name}</h3>
+                  <p>{table.seats} người</p>
+                  <p className="table-status">{getStatusText(table.status)}</p>
+                  <p className="table-position">{table.position}</p>
+                </div>
+                
+                <div className="table-qr">
+                  <div className="qr-content">
+                    <QRCodeSVG
+                      value={getReservationUrl(table)}
+                      size={100}
+                      level={"H"}
+                      includeMargin={true}
+                    />
+                    <p>Quét mã để đặt bàn</p>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
         
         <div className="table-legend">
           <div className="legend-item">
             <span className="status-dot available"></span> Trống
           </div>
           <div className="legend-item">
-            <span className="status-dot reserved"></span> Đã đặt
+            <span className="status-dot booked"></span> Đã đặt
           </div>
           <div className="legend-item">
-            <span className="status-dot occupied"></span> Đã có khách
+            <span className="status-dot unavailable"></span> Không khả dụng
           </div>
         </div>
         
@@ -156,7 +244,12 @@ const TableReservation = ({ isOpen, onClose }) => {
             <p><strong>Vị trí:</strong> {selectedTable.position}</p>
             <p><strong>Trạng thái:</strong> {getStatusText(selectedTable.status)}</p>
             {selectedTable.status === 'available' && (
-              <button className="reserve-btn">Đặt bàn ngay</button>
+              <button 
+                className="reserve-btn"
+                onClick={() => handleReserveTable(selectedTable.id)}
+              >
+                Đặt bàn ngay
+              </button>
             )}
           </div>
         )}

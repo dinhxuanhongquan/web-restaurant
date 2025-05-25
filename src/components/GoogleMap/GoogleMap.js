@@ -39,8 +39,8 @@ const MapComponent = () => {
     <section id="location" className="map-section">
       <div className="container">
         <div className="section-title">
-          <h2>Location</h2>
-          <p>Visit our restaurant for an unforgettable dining experience</p>
+          <h2>Vị Trí</h2>
+          <p>Hãy đến với nhà hàng của chúng tôi để có một trải nghiệm ẩm thực khó quên</p>
         </div>
 
         <div className="map-container">
@@ -71,7 +71,7 @@ const MapComponent = () => {
                             target="_blank"
                             rel="noopener noreferrer"
                           >
-                            Get Directions
+                            Nhận chỉ đường
                           </a>
                         </div>
                       </InfoWindow>
@@ -85,19 +85,19 @@ const MapComponent = () => {
 
           <div className="location-info">
             <div className="info-card">
-              <h3>Visit Our Restaurant</h3>
+              <h3>Hãy đến với nhà hàng của chúng tôi</h3>
               <div className="info-item">
-                <strong>Address:</strong>
+                <strong>Địa chỉ:</strong>
                 <p>17A Cộng Hòa, Tân Bình, TP.Hồ Chí Minh</p>
               </div>
               <div className="info-item">
-                <strong>Hours:</strong>
-                <p>Monday - Friday: 12:00 PM - 10:00 PM</p>
-                <p>Saturday - Sunday: 11:00 AM - 11:00 PM</p>
+                <strong>Giờ mở cửa:</strong>
+                <p>Thứ Hai - Thứ Sáu: 12:00 PM - 10:00 PM</p>
+                <p>Thứ Bảy - Chủ Nhật: 11:00 AM - 11:00 PM</p>
               </div>
               <div className="info-item">
-                <strong>Contact:</strong>
-                <p>Phone: (+84) 0963 689 773</p>
+                <strong>Liên hệ:</strong>
+                <p>Điện thoại: (+84) 0963 689 773</p>
                 <p>Email: quandinh.09022003@gmail.com</p>
               </div>
               <a 
@@ -106,7 +106,7 @@ const MapComponent = () => {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                Get Directions
+                Nhận chỉ đường
               </a>
             </div>
           </div>

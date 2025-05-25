@@ -1,91 +1,147 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import './Menu.css';
 import FoodDetail from '../FoodDetail/FoodDetail';
 
 const Menu = ({ user, setIsLoginOpen }) => {
-  const [activeCategory, setActiveCategory] = useState('starters');
+  const [categories, setCategories] = useState([]); // Đảm bảo khởi tạo là array
+  const [dishes, setDishes] = useState([]); // Đảm bảo khởi tạo là array
+  const [activeCategory, setActiveCategory] = useState(null);
   const [selectedFood, setSelectedFood] = useState(null);
-  
-  const menuItems = {
-    starters: [
-      { id: 1, name: 'Bruschetta', description: 'Toasted bread with tomatoes, garlic and basil', price: '89.000 VNĐ', image: 'https://images.unsplash.com/photo-1626200419199-391ae4be7f94' },
-      { id: 2, name: 'Caprese Salad', description: 'Fresh mozzarella, tomatoes, and sweet basil', price: '99.000 VNĐ', image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c' },
-      { id: 3, name: 'Garlic Bread', description: 'Oven-baked bread with garlic butter and herbs', price: '59.000 VNĐ', image: 'https://images.unsplash.com/photo-1573140247632-f8fd74997d5c' }
-    ],
-    mains: [
-      { id: 4, name: 'Spaghetti Carbonara', description: 'Classic carbonara with pancetta and egg', price: '149.000 VNĐ', image: 'https://images.unsplash.com/photo-1612874742237-6526221588e3' },
-      { id: 5, name: 'Margherita Pizza', description: 'San Marzano tomatoes, mozzarella, fresh basil', price: '129.000 VNĐ', image: 'https://images.unsplash.com/photo-1604068549290-dea0e4a305ca' },
-      { id: 6, name: 'Risotto ai Funghi', description: 'Creamy risotto with wild mushrooms and parmesan', price: '169.000 VNĐ', image: 'https://images.unsplash.com/photo-1476124369491-e7addf5db371' }
-    ],
-    desserts: [
-      { id: 7, name: 'Tiramisu', description: 'Coffee-flavored Italian dessert', price: '79.000 VNĐ', image: 'https://images.unsplash.com/photo-1551024506-0bccd828d307' },
-      { id: 8, name: 'Panna Cotta', description: 'Italian dessert of sweetened cream with gelatin', price: '69.000 VNĐ', image: 'https://images.unsplash.com/photo-1579954115563-e72bf1381629' },
-      { id: 9, name: 'Cannoli', description: 'Tube-shaped shells filled with sweet cream', price: '89.000 VNĐ', image: 'https://images.unsplash.com/photo-1551504734-5ee1c4a1479b' }
-    ]
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(false);
+
+  const fetchCategories = async () => {
+    try {
+      const response = await axios.get(`http://localhost:8000/restaurant/category-dishes`);
+      
+      // Kiểm tra xem response.data có phải là array không
+      if (Array.isArray(response.data?.result)) {
+        setCategories(response.data.result);
+        setActiveCategory(response.data.result[0]?.categoryId); // Set the first category as active by default
+      } else {
+        console.error('Categories data is not an array:', response.data);
+        setCategories([]); // Set về array rỗng nếu không phải array
+        setError('Invalid categories data format');
+      }
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+      setCategories([]); // Đặt về array rỗng khi có lỗi
+      setError('Error fetching categories');
+    }
   };
 
-  const handleFoodClick = (food) => {
-    setSelectedFood(food);
+  const fetchDishes = async () => {
+    try {
+      const response = await axios.get(`http://localhost:8000/restaurant/dishes`);
+      
+      // Kiểm tra xem response.data có phải là array không
+      if (Array.isArray(response.data?.result)) {
+        setDishes(response.data.result);
+      } else {
+        console.error('Dishes data is not an array:', response.data);
+        setDishes([]); // Set về array rỗng nếu không phải array
+        setError('Invalid dishes data format');
+      }
+      setIsLoading(false);
+    } catch (error) {
+      console.error('Error fetching dishes:', error);
+      setDishes([]); // Đặt về array rỗng khi có lỗi
+      setError('Error fetching dishes');
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchCategories();
+    fetchDishes();
+  }, []);
+
+  const handleFoodClick = async (dishId) => {
+    try {
+      const response = await axios.get(`http://localhost:8000/restaurant/dishes/${dishId}`);
+      if (response.data?.result) {
+        setSelectedFood(response.data.result);
+        localStorage.setItem('dishId', dishId);
+      }
+    } catch (error) {
+      console.error('Error fetching dish details:', error);
+      setError("Error fetching dish details");
+    }
   };
 
   const handleCloseDetail = () => {
     setSelectedFood(null);
+    localStorage.removeItem('dishId');
   };
+
+  // Đảm bảo dishes là array trước khi filter
+  const filteredDishes = activeCategory && Array.isArray(dishes)
+    ? dishes.filter(dish => dish.categoryDish && dish.categoryDish.categoryId === activeCategory)
+    : Array.isArray(dishes) ? dishes : [];
+
+  if (isLoading) {
+    return <div className="loading">Đang tải thực đơn...</div>;
+  }
+
+  if (error) {
+    return <div className="error-message">{typeof error === 'string' ? error : 'Đã xảy ra lỗi'}</div>;
+  }
 
   return (
     <section id="menu" className="menu-section">
       <div className="container">
         <div className="section-title">
-          <h2>Our Menu</h2>
-          <p>Explore our delicious offerings</p>
+          <h2>Thực Đơn Của Chúng Tôi</h2>
+          <p>Khám phá những món ăn ngon miệng của chúng tôi </p>
         </div>
         
         <div className="menu-tabs">
-          <button 
-            className={activeCategory === 'starters' ? 'active' : ''}
-            onClick={() => setActiveCategory('starters')}
-          >
-            Starters
-          </button>
-          <button 
-            className={activeCategory === 'mains' ? 'active' : ''}
-            onClick={() => setActiveCategory('mains')}
-          >
-            Main Courses
-          </button>
-          <button 
-            className={activeCategory === 'desserts' ? 'active' : ''}
-            onClick={() => setActiveCategory('desserts')}
-          >
-            Desserts
-          </button>
+          {/* Kiểm tra categories là array trước khi map */}
+          {Array.isArray(categories) && categories.length > 0 ? (
+            categories.map(category => (
+              <button 
+                key={category.categoryId}
+                className={activeCategory === category.categoryId ? 'active' : ''}
+                onClick={() => setActiveCategory(category.categoryId)}
+              >
+                {category.categoryName}
+              </button>
+            ))
+          ) : (
+            <p>No categories available</p>
+          )}
         </div>
         
         <div className="menu-items">
-          {menuItems[activeCategory].map(item => (
-            <div 
-              className="menu-item" 
-              key={item.id}
-              onClick={() => handleFoodClick(item)}
-            >
-              <div className="menu-item-img">
-                <img src={item.image} alt={item.name} />
-              </div>
-              <div className="menu-item-info">
-                <div className="menu-item-header">
-                  <h3>{item.name}</h3>
-                  <span className="price">{item.price}</span>
+          {filteredDishes.length > 0 ? (
+            filteredDishes.map(dish => (
+              <div 
+                className="menu-item" 
+                key={dish.dishId}
+                onClick={() => handleFoodClick(dish.dishId)}
+              >
+                <div className="menu-item-img">
+                  <img src={dish.dishImage || 'https://via.placeholder.com/150'} alt={dish.dishName} />
                 </div>
-                <p>{item.description}</p>
+                <div className="menu-item-info">
+                  <div className="menu-item-header">
+                    <h3>{dish.dishName}</h3>
+                    <span className="price">{dish.dishPrice} VNĐ</span>
+                  </div>
+                  <p>{dish.dishDescription}</p>
+                </div>
               </div>
-            </div>
-          ))}
+            ))
+          ) : (
+            <p className="no-items">No dishes available in this category</p>
+          )}
         </div>
       </div>
       
       {selectedFood && (
         <FoodDetail 
-          foodId={selectedFood.id} 
+          foodId={selectedFood.dishId} 
           food={selectedFood}
           onClose={() => handleCloseDetail()} 
           isAdmin={user?.isAdmin} 

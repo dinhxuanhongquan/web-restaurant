@@ -6,8 +6,8 @@ const About = () => {
     <section id="about" className="about-section">
       <div className="container">
         <div className="section-title">
-          <h2>About Us</h2>
-          <p>Our story and passion for food</p>
+          <h2>Về chúng tôi</h2>
+          <p>Câu chuyện và đam mê ẩm thực của chúng tôi</p>
         </div>
         
         <div className="about-content">
@@ -16,29 +16,29 @@ const About = () => {
           </div>
           
           <div className="about-text">
-            <h3>La Delizioso - Established 1992</h3>
+            <h3>Nhà Hàng Truyền Thống - Thành lập 1992</h3>
             <p>
-              Founded by the Rossi family, La Delizioso brings the authentic flavors of Italian cuisine to your table. Our story begins in a small town near Naples, where our recipes have been passed down through generations.
+              Được thành lập bởi gia đình Truyền Thống, Nhà Hàng Truyền Thống mang hương vị đích thực của ẩm thực Việt Nam đến tận bàn ăn của bạn. Câu chuyện của chúng tôi được truyền qua nhiều thế hệ.
             </p>
             <p>
-              At La Delizioso, we believe in using only the freshest ingredients, sourced locally whenever possible. Our chef, Antonio Rossi, trained in some of Italy's finest restaurants before bringing his expertise to create a dining experience that combines tradition with innovation.
+              Tại Nhà Hàng Truyền Thống, chúng tôi tin tưởng vào việc sử dụng chỉ những nguyên liệu tươi ngon nhất, được tìm nguồn cung ứng tại địa phương bất cứ khi nào có thể. Đầu bếp của chúng tôi, đã được đào tạo tại một số nhà hàng tốt nhất của Việt Nam trước khi mang kinh nghiệm của mình đến để tạo ra một trải nghiệm ẩm thực kết hợp giữa truyền thống và đổi mới.
             </p>
             <p>
-              We invite you to join us for a meal and become part of our story. Whether you're celebrating a special occasion or simply enjoying a night out, we promise an unforgettable culinary journey.
+              Chúng tôi mời bạn tham gia bữa ăn và trở thành một phần trong câu chuyện của chúng tôi. Hãy để chúng tôi phục vụ bạn những món ăn ngon nhất, từ những món ăn đường phố đến những món ăn cao cấp, tất cả đều được chế biến với tình yêu và sự chăm sóc.
             </p>
-            
+
             <div className="features">
               <div className="feature">
-                <h4>Quality Ingredients</h4>
-                <p>We source the finest ingredients, many imported directly from Italy.</p>
+                <h4>Nguyên Liệu Chất Lượng</h4>
+                <p>Chúng tôi chọn lọc những nguyên liệu tốt nhất, giàu dinh dưỡng.</p>
               </div>
               <div className="feature">
-                <h4>Traditional Recipes</h4>
-                <p>Our dishes follow authentic recipes passed through generations.</p>
+                <h4>Công Thức Truyền Thống</h4>
+                <p>Các món ăn của chúng tôi tuân theo những công thức chính thống đã được truyền qua nhiều thế hệ.</p>
               </div>
               <div className="feature">
-                <h4>Warm Atmosphere</h4>
-                <p>Experience the welcoming ambiance of an Italian family dinner.</p>
+                <h4>Không Gian Ấm Cúng</h4>
+                <p>Trải nghiệm không gian ấm cúng của một bữa tối gia đình Việt Nam .</p>
               </div>
             </div>
           </div>

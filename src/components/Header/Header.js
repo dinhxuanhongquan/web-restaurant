@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import './Header.css';
 import axios from "axios";
 
@@ -7,9 +7,28 @@ const Header = ({
     user, 
     onLogout: logoutHandler, 
     setIsAdminPanelOpen,
-    setIsProfileOpen 
+    setIsProfileOpen,
+    setIsMenuPageOpen
 }) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [users, setUsers] = useState([]);
+
+    const fetchUsers = async () => {
+        const token = localStorage.getItem('token');
+        if (!token) return;
+
+        try {
+            const response = await axios.get(`http://localhost:8000/restaurant/users/me`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            setUsers(response.data.result || []);
+        } catch (error) {
+            console.error("Error fetching users:", error);
+        }
+    };
+
 
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
@@ -37,19 +56,25 @@ const Header = ({
         }
     };
 
+    useEffect(() => {
+        if (user) {
+            fetchUsers();
+        }
+    }, [user]);
+
     return (
         <header className="header">
             <div className="container">
                 <div className="header-wrapper">
                     <div className="logo">
-                        <h1>My Restaurant</h1>
+                        <h1>Nhà Hàng Truyền Thống</h1>
                     </div>
                     <div className={`nav-menu ${isMenuOpen ? 'active' : ''}`}>
                         <ul className="nav-list">
-                            <li><a href="#home">Home</a></li>
-                            <li><a href="#menu">Menu</a></li>
-                            <li><a href="#about">About us</a></li>
-                            <li><a href="#contact">Contact</a></li>
+                            <li><a href="#home">Trang chủ</a></li>
+                            <li><a href="#menu">Thực đơn</a></li>
+                            <li><a href="#about">Về chúng tôi</a></li>
+                            <li><a href="#contact">Liên hệ</a></li>
                             {user?.isAdmin && (
                                 <li>
                                     <button 
@@ -60,6 +85,7 @@ const Header = ({
                                     </button>
                                 </li>
                             )}
+                            <li style={{ cursor: 'pointer' }} onClick={() => setIsMenuPageOpen(true)}>Danh sách món ăn</li>
                         </ul>
                     </div>
                     <div className="mobile-menu" onClick={toggleMenu}>
@@ -72,13 +98,23 @@ const Header = ({
                             </div>
                         ) : (
                             <div className="user-welcome">
-                                Hi, {user.username}
                                 <div className="user-dropdown">
-                                    <button className="user-menu-btn">
-                                        <i className="fa fa-user"></i> {/* Thêm FontAwesome nếu có */}
-                                    </button>
                                     <div className="user-dropdown-content">
-                                        <button onClick={() => setIsProfileOpen(true)}>Tài khoản của tôi</button>
+                                        <div className="user-avatar-container">
+                                            {users.image ? (
+                                                <img 
+                                                    src={typeof users.image === 'object' && users.image.data ? users.image.data : users.image}
+                                                    alt="User Avatar" 
+                                                    className="user-avatar"
+                                                />
+                                            ) : (
+                                                <div className="default-avatar">
+                                                    {user.username?.charAt(0).toUpperCase() || 'U'}
+                                                </div>
+                                            )}
+                                            <span className="user-full-name">{users.firstName} {users.lastName}</span>
+                                        </div>
+                                        <button className="logout-btn" onClick={() => setIsProfileOpen(true)}>Tài khoản của tôi</button>
                                         <button className="logout-btn" onClick={handleLogout}>Đăng xuất</button>
                                     </div>
                                 </div>
