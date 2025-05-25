@@ -1,6 +1,7 @@
 package com.example.web_restaurant.dto.request;
 
 
+import com.example.web_restaurant.entity.Role;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -13,7 +14,6 @@ import java.util.List;
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserUpdateRequest {
-    String username;
     String password;
     String firstName;
     String lastName;
@@ -24,8 +24,5 @@ public class UserUpdateRequest {
     String phoneNumber;
     String image;
 
-    List<String> roles;
-//    List<String> bookings;
-//    List<String> feedBacks;
-//    List<String> replies;
+    List<String> roleNames;
 }

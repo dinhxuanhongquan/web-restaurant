@@ -12,6 +12,5 @@ import java.time.LocalDateTime;
 @FieldDefaults( level = AccessLevel.PRIVATE)
 public class ReplyCreationRequest {
     String replyContent;
-    LocalDateTime replyTime;
     String feedbackId;
 }
