@@ -3,7 +3,6 @@ package com.example.web_restaurant.dto.response;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -19,7 +18,5 @@ public class DishResponse {
     String dishPrice;
     String nameChef;
 
-//    Set<BillDishResponse> billDishes;
-//    Set<FeedBackResponse> feedBacks;
     CategoryDishResponse categoryDish;
 }

@@ -17,6 +17,5 @@ public class DishUpdateRequest {
     String dishPrice;
     String nameChef;
 
-//    List<String> feedBacks;
     String categoryDishId;
 }

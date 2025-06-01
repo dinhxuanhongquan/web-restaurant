@@ -21,6 +21,4 @@ public class DishCreationRequest {
     String nameChef;
 
     String categoryDishId;
-//    Set<BillDish> billDishes;
-//    Set<FeedBack> feedBacks;
 }

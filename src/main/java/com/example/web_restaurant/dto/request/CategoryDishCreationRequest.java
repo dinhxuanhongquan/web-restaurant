@@ -15,6 +15,4 @@ public class CategoryDishCreationRequest {
 
     String categoryName;
     String categoryDescription;
-
-//    Set<Dish> dishes;
 }

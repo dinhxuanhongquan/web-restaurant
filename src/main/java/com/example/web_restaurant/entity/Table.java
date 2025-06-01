@@ -4,7 +4,6 @@ package com.example.web_restaurant.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -25,8 +24,6 @@ public class Table {
     String tableStatus;
     String tableLocation;
 
-//    @OneToMany(mappedBy = "table", cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-//    Set<Booking> bookings;
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "userId")
     User user;

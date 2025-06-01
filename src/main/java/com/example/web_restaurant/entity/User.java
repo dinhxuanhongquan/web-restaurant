@@ -36,15 +36,6 @@ public class User {
     String email;
     String phoneNumber;
 
-//    @OneToMany(mappedBy = "user", cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-//    Set<Booking> bookings;
-//
-//    @OneToMany(mappedBy = "user", cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-//    Set<FeedBack> feedBacks;
-//
-//    @OneToMany(mappedBy = "user", cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-//    Set<Reply> replies;
-
     @ManyToMany
     Set<Role> roles;
 }

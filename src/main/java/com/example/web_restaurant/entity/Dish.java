@@ -1,7 +1,6 @@
 package com.example.web_restaurant.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -34,6 +33,4 @@ public class Dish {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "categoryId")
     CategoryDish categoryDish;
-
-
 }

@@ -13,6 +13,4 @@ import java.util.Set;
 public class CategoryDishUpdateRequest {
     String categoryName;
     String categoryDescription;
-
-//    Set<String> dishes;
 }

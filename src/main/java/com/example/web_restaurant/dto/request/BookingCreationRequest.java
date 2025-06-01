@@ -13,7 +13,5 @@ import java.time.LocalDateTime;
 public class BookingCreationRequest {
     LocalDateTime bookingTime;
 
-//    String userId;
     String tableId;
-//    String billId;
 }

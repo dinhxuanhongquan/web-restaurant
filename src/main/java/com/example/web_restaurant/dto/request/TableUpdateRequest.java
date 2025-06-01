@@ -2,7 +2,6 @@ package com.example.web_restaurant.dto.request;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import java.util.Set;
 
 @Builder
 @Data
@@ -15,5 +14,4 @@ public class TableUpdateRequest {
     String tableKind;
     String tableStatus;
     String tableLocation;
-//    Set<String> bookings;
 }

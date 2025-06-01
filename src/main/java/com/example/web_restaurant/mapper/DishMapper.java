@@ -15,8 +15,6 @@ public interface DishMapper {
     Dish toDish(DishCreationRequest request);
 
     @Mapping(target = "categoryDish", source = "categoryDish")
-//    @Mapping(target = "feedBacks", source = "feedBacks")
-//    @Mapping(target = "billDishes", source = "billDishes")
     DishResponse toResponse(Dish dish);
 
     @Mapping(target = "categoryDish", ignore = true)

@@ -10,7 +10,6 @@ import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = "spring", uses = {BookingMapper.class, UserMapper.class})
 public interface TableMapper {
-//    @Mapping(target = "bookings", ignore = true)
     @Mapping(target = "user", ignore = true)
     Table toTable(TableCreationRequest request);
 
