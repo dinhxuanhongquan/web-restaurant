@@ -19,8 +19,23 @@ const Contact = ({setIsLoginOpen, user}) => {
     const token = localStorage.getItem('token');
     setIsLoggedIn(!!token); // Chuyển token sang boolean
     
+    // Get URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const tableIdFromUrl = urlParams.get('tableId');
+    
     if (token) {
-      fetchTables();
+      fetchTables().then(() => {
+        // After fetching tables, if we have a tableId from URL, pre-select it
+        if (tableIdFromUrl) {
+          setFormData(prev => ({
+            ...prev,
+            tableId: tableIdFromUrl
+          }));
+          
+          // Scroll to the reservation form
+          document.getElementById('contact').scrollIntoView({ behavior: 'smooth' });
+        }
+      });
     } else {
       setLoading(false);
     }

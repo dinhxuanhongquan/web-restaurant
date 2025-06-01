@@ -11,6 +11,11 @@
   z-index: 1002;
 }
 
+.table-item.not-clickable {
+  cursor: not-allowed;
+  opacity: 0.8;
+}
+
 .table-container {
   background-color: white;
   width: 90%;

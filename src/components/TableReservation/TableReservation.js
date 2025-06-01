@@ -92,11 +92,27 @@ const TableReservation = ({ isOpen, onClose, user }) => {
   
   // Handle table click
   const handleTableClick = (table) => {
+    if (table.status === 'booked' || table.status === 'unavailable') {
+      return;
+    }
+    // Toggle selection
+
     if (selectedTable && selectedTable.id === table.id) {
       setSelectedTable(null);
     } else {
       setSelectedTable(table);
     }
+  };
+
+  const handleQrCodeClick = (table, e) => {
+    e.stopPropagation(); // Prevent the table click event
+    e.preventDefault(); // Prevent default action
+
+    onClose(); // Close the modal after redirecting
+
+    setTimeout(() => {
+      window.location.href = `/contact?tableId=${table.id}`;
+    }, 100);
   };
 
   // Handle table reservation
@@ -198,7 +214,7 @@ const TableReservation = ({ isOpen, onClose, user }) => {
             {filteredTables.map(table => (
               <div 
                 key={table.id}
-                className={`table-item ${table.status} ${selectedTable && selectedTable.id === table.id ? 'selected' : ''}`}
+                className={`table-item ${table.status} ${selectedTable && selectedTable.id === table.id ? 'selected' : ''} ${table.status === 'booked' ? 'not-clickable' : ''}`}
                 onClick={() => handleTableClick(table)}
               >
                 <div className="table-info">
@@ -209,7 +225,8 @@ const TableReservation = ({ isOpen, onClose, user }) => {
                 </div>
                 
                 <div className="table-qr">
-                  <div className="qr-content">
+                  <div className="qr-content" onClick={(e) => handleQrCodeClick(table, e)}>
+                    <span className="qr-icon">📱</span>
                     <QRCodeSVG
                       value={getReservationUrl(table)}
                       size={100}
