@@ -55,6 +55,8 @@ public enum ErrorCode {
     INVALID_BOOKING_TIME_MIN_MONTH(1035, "Booking cannot be more than 1 month or less than 1 hour in advance.", HttpStatus.BAD_REQUEST),
 
     ROLE_NOT_EXISTED(1036, "Role not existed", HttpStatus.NOT_FOUND),
+
+    FAILED_TO_CREATE_MESSAGE(1037, "Failed to create message", HttpStatus.INTERNAL_SERVER_ERROR),
     ;
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {
