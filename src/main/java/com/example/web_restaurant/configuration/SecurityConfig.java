@@ -45,7 +45,9 @@ public class SecurityConfig {
             "/auth/logout",
             "/auth/refresh",
             "/auth/password/reset-request",
-            "/auth/password/reset-confirm"
+            "/auth/password/reset-confirm",
+            "/api/chat/**",
+            "/api/chat/messages"
     };
 
     private final  CustomJwtDecoder customJwtDecoder;

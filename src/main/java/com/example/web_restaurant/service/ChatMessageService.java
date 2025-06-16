@@ -65,7 +65,6 @@ public class ChatMessageService {
     }
 
     @Transactional(readOnly = true)
-    @PreAuthorize("hasRole('ADMIN')")
     public List<ChatMessageResponse> getMessagesByCustomerEmail(String customerEmail) {
         List<ChatMessage> messages = chatMessageRepository.findByCustomerEmailOrderByCreatedAtDesc(customerEmail);
         return messages.stream()
