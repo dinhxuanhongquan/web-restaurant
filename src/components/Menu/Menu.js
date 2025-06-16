@@ -115,7 +115,7 @@ const Menu = ({ user, setIsLoginOpen }) => {
         
         <div className="menu-items">
           {filteredDishes.length > 0 ? (
-            filteredDishes.map(dish => (
+            filteredDishes.slice(0, 3).map(dish => (
               <div 
                 className="menu-item" 
                 key={dish.dishId}

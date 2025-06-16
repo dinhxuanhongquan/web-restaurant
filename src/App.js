@@ -11,6 +11,7 @@ import AdminPanel from './components/Admin/AdminPanel';
 import GoogleMap from './components/GoogleMap/GoogleMap';
 import ProfilePage from './components/ProfilePage/ProfilePage';
 import  MenuPage from './components/MenuPage/MenuPage';
+import ChatWidget from './components/ChatWidget/ChatWidget';
 import { getCurrentUser, logoutUser } from './services/authService';
 
 
@@ -87,6 +88,7 @@ function App() {
       />
       <Footer />
       <GoogleMap />
+      <ChatWidget user={user} />
       {isLoginOpen && (
         <Login 
           setIsLoginOpen={setIsLoginOpen} 
